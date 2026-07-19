@@ -1,0 +1,934 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="system">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="description" content="Car Cricket – the road trip scoring game. Spot vehicles and score runs!">
+<title>Car Cricket</title>
+<style>
+:root {
+  --c-primary: #1a5c36;
+  --c-primary-lite: #237348;
+  --c-accent: #e8a800;
+  --c-danger: #c0392b;
+  --c-danger-dk: #a93226;
+  --c-warning: #d35400;
+  --c-bg: #f4f4ef;
+  --c-surface: #ffffff;
+  --c-surface2: #ebebE6;
+  --c-border: #d0d0c8;
+  --c-text: #1a1a18;
+  --c-muted: #636360;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --touch: 58px;
+  --safe-t: env(safe-area-inset-top, 0px);
+  --safe-b: env(safe-area-inset-bottom, 0px);
+  --safe-l: env(safe-area-inset-left, 0px);
+  --safe-r: env(safe-area-inset-right, 0px);
+}
+[data-theme="dark"] {
+  --c-primary: #2d7a50; --c-primary-lite: #3a9060;
+  --c-bg: #0f1820; --c-surface: #19253a; --c-surface2: #243045;
+  --c-border: #364860; --c-text: #e6e6de; --c-muted: #96a0b0;
+}
+@media (prefers-color-scheme:dark) {
+  [data-theme="system"] {
+    --c-primary: #2d7a50; --c-primary-lite: #3a9060;
+    --c-bg: #0f1820; --c-surface: #19253a; --c-surface2: #243045;
+    --c-border: #364860; --c-text: #e6e6de; --c-muted: #96a0b0;
+  }
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-family:system-ui,-apple-system,'Segoe UI',sans-serif;font-size:16px;background:var(--c-bg);color:var(--c-text);-webkit-text-size-adjust:100%}
+body{min-height:100dvh;background:var(--c-bg);overflow-x:hidden}
+button{font-family:inherit;cursor:pointer;border:none;border-radius:var(--radius-sm);font-size:1rem;font-weight:600;min-height:var(--touch);padding:12px 20px;-webkit-tap-highlight-color:transparent;user-select:none;touch-action:manipulation;transition:filter 0.12s}
+button:active{filter:brightness(0.85)}
+button:disabled{opacity:0.42;cursor:not-allowed;filter:none}
+button:focus-visible{outline:3px solid var(--c-accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){button{transition:none}}
+input[type="text"],input[type="number"],select{font-family:inherit;font-size:1rem;padding:12px 14px;border:2px solid var(--c-border);border-radius:var(--radius-sm);background:var(--c-surface);color:var(--c-text);min-height:var(--touch);width:100%}
+input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-accent);outline-offset:0}
+.screen{display:none;min-height:100dvh;padding:calc(var(--safe-t) + 12px) calc(var(--safe-r) + 16px) calc(var(--safe-b) + 16px) calc(var(--safe-l) + 16px)}
+.screen.active{display:flex;flex-direction:column}
+
+/* SETUP */
+#screen-setup{max-width:500px;margin:0 auto;width:100%;gap:20px;align-items:stretch}
+.setup-header{text-align:center;padding:20px 0 4px}
+.app-title{font-size:clamp(2.4rem,9vw,3.8rem);font-weight:900;color:var(--c-primary);letter-spacing:-1px;line-height:1}
+.app-subtitle{font-size:1.05rem;color:var(--c-muted);margin-top:6px}
+.setup-desc{background:var(--c-surface);border-radius:var(--radius);padding:14px 16px;font-size:0.92rem;color:var(--c-muted);border-left:4px solid var(--c-accent);line-height:1.5}
+.setup-desc strong{color:var(--c-text)}
+.players-label{font-weight:700;font-size:1.05rem;display:block;margin-bottom:10px}
+.player-input-row{display:flex;gap:8px;margin-bottom:10px;align-items:center}
+.player-input-row input{flex:1}
+.btn-icon{width:var(--touch);min-width:var(--touch);height:var(--touch);padding:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;border-radius:var(--radius-sm);flex-shrink:0}
+.btn-remove{background:#fee2e2;color:#c0392b}
+.btn-add-player{background:var(--c-surface2);color:var(--c-text);border:2px solid var(--c-border);width:100%}
+.setup-actions{display:flex;flex-direction:column;gap:10px}
+.btn-primary{background:var(--c-primary);color:#fff;font-size:1.1rem;font-weight:700}
+.btn-secondary{background:var(--c-surface);color:var(--c-text);border:2px solid var(--c-border)}
+.btn-ghost{background:transparent;color:var(--c-muted);border:2px solid transparent;font-size:0.95rem;min-height:48px}
+.btn-danger{background:var(--c-danger);color:#fff}
+.btn-warning{background:var(--c-warning);color:#fff}
+.mt8{margin-top:8px}
+
+/* GAME */
+#screen-game{padding:0;gap:0}
+.game-header{background:var(--c-primary);color:#fff;padding:calc(var(--safe-t) + 10px) calc(var(--safe-r) + 16px) 14px calc(var(--safe-l) + 16px)}
+.game-header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.hero-info{flex:1;min-width:0}
+.hero-label{font-size:0.8rem;opacity:0.75;text-transform:uppercase;letter-spacing:1.2px;font-weight:600}
+.hero-name{font-size:clamp(1.9rem,7.5vw,3.5rem);font-weight:900;line-height:1.1;word-break:break-word;margin:2px 0}
+.hero-score{font-size:clamp(3.2rem,14vw,6.5rem);font-weight:900;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-2px}
+.hero-score.neg{color:#ffaaaa}
+.header-side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}
+.status-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
+.status-badge.active{background:rgba(39,174,96,0.25);color:#6ae89a;border:1px solid rgba(39,174,96,0.4)}
+.status-badge.paused{background:rgba(232,168,0,0.3);color:#ffd54f;border:1px solid rgba(232,168,0,0.5)}
+.btn-pause{background:rgba(255,255,255,0.15);color:#fff;border:2px solid rgba(255,255,255,0.35);font-size:0.9rem;padding:8px 14px;min-height:46px}
+.btn-pause.is-paused{background:rgba(232,168,0,0.25);border-color:var(--c-accent);color:var(--c-accent)}
+.paused-banner{display:none;background:var(--c-accent);color:#1a1a00;text-align:center;padding:9px 16px;font-weight:700;font-size:0.92rem;flex-shrink:0}
+.paused-banner.show{display:block}
+
+/* TABS */
+.tab-nav{display:flex;background:var(--c-surface);border-bottom:2px solid var(--c-border);overflow-x:auto;scrollbar-width:none;flex-shrink:0}
+.tab-nav::-webkit-scrollbar{display:none}
+.tab-btn{flex:1;min-width:64px;padding:11px 6px;background:none;color:var(--c-muted);border-radius:0;border-bottom:3px solid transparent;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;min-height:48px;white-space:nowrap}
+.tab-btn.active{color:var(--c-primary);border-bottom-color:var(--c-primary)}
+.tab-btn:active{filter:none}
+.tab-panels{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.tab-panel{display:none;padding:14px 16px}
+.tab-panel.active{display:block}
+.panel-footer{height:calc(var(--safe-b) + 8px)}
+
+/* SCORING BUTTONS */
+.scoring-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
+.btn-score{background:var(--c-surface);color:var(--c-text);border:2px solid var(--c-border);font-weight:700;padding:14px 10px;min-height:84px;border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;line-height:1.2;text-align:center}
+.btn-score .s-icon{font-size:1.7rem;line-height:1;display:block}
+.btn-score .s-label{font-size:0.78rem;font-weight:600;opacity:0.75}
+.btn-score .s-value{font-size:1.05rem;font-weight:800}
+.btn-score.car{border-color:#4a8fcf}
+.btn-score.caravan{border-color:#7b4ea7}
+.btn-score.moto{border-color:#2d8a5f}
+.btn-score.bus{border-color:#d07030}
+.btn-score.bicycle{grid-column:1/-1;flex-direction:row;gap:12px;min-height:68px;border-color:#a02020}
+.btn-score.bicycle .s-value{color:var(--c-danger)}
+.red-car-zone{border-top:2px solid var(--c-border);padding-top:12px;margin-top:2px}
+.red-zone-label{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--c-muted);text-align:center;margin-bottom:8px}
+.btn-red-car{background:var(--c-danger);color:#fff;width:100%;font-size:1.1rem;font-weight:800;min-height:76px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:14px;letter-spacing:0.5px;border:3px solid var(--c-danger-dk)}
+.btn-red-car .s-icon{font-size:2rem}
+
+/* SCOREBOARD */
+.sb-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.sb-title{font-weight:700;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--c-muted)}
+.btn-sort{background:var(--c-surface2);color:var(--c-text);border:1px solid var(--c-border);font-size:0.8rem;padding:6px 12px;min-height:38px;font-weight:600}
+.sb-list{list-style:none;display:flex;flex-direction:column;gap:8px}
+.sb-item{background:var(--c-surface);border:2px solid var(--c-border);border-radius:var(--radius);padding:13px 16px;display:flex;align-items:center;gap:10px}
+.sb-item.current{background:var(--c-primary);border-color:var(--c-primary);color:#fff}
+.sb-rank{font-size:1rem;font-weight:800;min-width:26px;text-align:center;opacity:0.65}
+.sb-name{flex:1;font-size:1.05rem;font-weight:700;word-break:break-word}
+.batting-badge{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:var(--c-accent);color:#1a1a00;padding:2px 8px;border-radius:12px;white-space:nowrap;flex-shrink:0}
+.sb-score{font-size:1.4rem;font-weight:900;font-variant-numeric:tabular-nums;min-width:48px;text-align:right}
+
+/* TRIP SUMMARY */
+.summary-tbl{width:100%;border-collapse:collapse;background:var(--c-surface);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)}
+.summary-tbl th{background:var(--c-primary);color:#fff;padding:11px 16px;text-align:left;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px}
+.summary-tbl td{padding:11px 16px;border-bottom:1px solid var(--c-border);font-size:0.98rem}
+.summary-tbl tr:last-child td{border-bottom:none}
+.summary-tbl tr:nth-child(even) td{background:var(--c-surface2)}
+.summary-tbl .cnt{font-weight:800;font-size:1.1rem;text-align:right}
+.summary-tbl .total-row td{font-weight:700;background:var(--c-surface2)!important}
+
+/* UMPIRE */
+.ump-section{background:var(--c-surface);border:2px solid var(--c-border);border-radius:var(--radius);padding:14px;margin-bottom:12px}
+.ump-title{font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--c-muted);margin-bottom:10px}
+.undo-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.btn-undo,.btn-redo{background:var(--c-surface2);color:var(--c-text);border:2px solid var(--c-border)}
+.form-row{display:flex;flex-direction:column;gap:6px;margin-bottom:10px}
+.form-row label{font-size:0.88rem;font-weight:600}
+.form-inline{display:flex;gap:8px;align-items:flex-end}
+.form-inline .form-row{flex:1;margin:0}
+.btn-apply{background:var(--c-primary);color:#fff;white-space:nowrap;min-width:76px;min-height:var(--touch)}
+.undo-info{font-size:0.82rem;color:var(--c-muted);margin-top:8px}
+.controls-grid{display:flex;flex-direction:column;gap:10px}
+.ctrl-divider{border:none;border-top:2px solid var(--c-border);margin:4px 0}
+.sec-heading{font-size:0.9rem;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
+
+/* END GAME */
+#screen-end{max-width:540px;margin:0 auto;width:100%;gap:18px}
+.end-header{text-align:center;padding:20px 0 4px}
+.end-title{font-size:2rem;font-weight:900;color:var(--c-primary)}
+.winner-box{background:var(--c-primary);color:#fff;border-radius:var(--radius);padding:20px;text-align:center}
+.winner-label{font-size:0.8rem;opacity:0.75;text-transform:uppercase;letter-spacing:1.2px}
+.winner-name{font-size:clamp(1.9rem,7vw,3.2rem);font-weight:900;margin:4px 0;line-height:1.1}
+.winner-score{font-size:1.3rem;font-weight:700;opacity:0.9}
+.end-section-title{font-size:0.9rem;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
+.end-actions{display:flex;flex-direction:column;gap:10px;padding-bottom:calc(var(--safe-b) + 8px)}
+
+/* SETTINGS */
+#screen-settings{max-width:500px;margin:0 auto;width:100%;gap:18px}
+.settings-hdr{display:flex;align-items:center;gap:12px;padding-top:8px}
+.settings-title{font-size:1.5rem;font-weight:800}
+.settings-section{background:var(--c-surface);border-radius:var(--radius);overflow:hidden;border:1px solid var(--c-border)}
+.settings-section-title{font-size:0.77rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--c-muted);padding:12px 16px 6px}
+.setting-row{display:flex;align-items:center;justify-content:space-between;padding:13px 16px;border-top:1px solid var(--c-border);gap:12px}
+.setting-row:first-of-type{border-top:none}
+.setting-info{flex:1}
+.setting-name{font-weight:600;font-size:0.95rem}
+.setting-desc{font-size:0.8rem;color:var(--c-muted);margin-top:2px}
+.toggle{position:relative;width:52px;height:30px;flex-shrink:0}
+.toggle input{opacity:0;width:0;height:0;position:absolute}
+.toggle-track{position:absolute;inset:0;background:var(--c-border);border-radius:15px;cursor:pointer;transition:background 0.18s}
+.toggle-track::after{content:'';position:absolute;left:3px;top:3px;width:24px;height:24px;background:#fff;border-radius:50%;transition:transform 0.18s;box-shadow:0 1px 3px rgba(0,0,0,0.25)}
+.toggle input:checked+.toggle-track{background:var(--c-primary)}
+.toggle input:checked+.toggle-track::after{transform:translateX(22px)}
+.toggle input:focus-visible+.toggle-track{outline:3px solid var(--c-accent);outline-offset:2px}
+@media (prefers-reduced-motion:reduce){.toggle-track,.toggle-track::after{transition:none}}
+.theme-btns{display:flex;gap:6px}
+.theme-btn{padding:6px 13px;border:2px solid var(--c-border);border-radius:20px;background:var(--c-surface2);color:var(--c-text);font-size:0.85rem;font-weight:600;min-height:38px}
+.theme-btn.on{border-color:var(--c-primary);background:var(--c-primary);color:#fff}
+.settings-footer{padding-bottom:calc(var(--safe-b) + 8px)}
+
+/* MODAL */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.58);z-index:1000;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal-dialog{background:var(--c-surface);border-radius:var(--radius);padding:22px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-height:90dvh;overflow-y:auto}
+.modal-title{font-size:1.2rem;font-weight:800;margin-bottom:8px}
+.modal-msg{color:var(--c-muted);font-size:0.93rem;line-height:1.5;margin-bottom:16px;white-space:pre-line}
+.modal-extra{margin-bottom:14px}
+.modal-actions{display:flex;flex-direction:column;gap:8px}
+.modal-actions button{min-height:50px}
+
+/* FILE INPUT */
+.file-btn-wrap{position:relative;overflow:hidden;display:block;width:100%}
+.file-btn-wrap input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:1}
+.file-btn-wrap .btn-secondary{width:100%;pointer-events:none;position:relative;z-index:0}
+.visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
+
+/* LANDSCAPE */
+@media (max-height:520px) and (orientation:landscape){
+  .hero-score{font-size:clamp(2.4rem,8vh,4.5rem)}
+  .hero-name{font-size:clamp(1.4rem,5vh,2.2rem)}
+  .scoring-grid{grid-template-columns:repeat(3,1fr)}
+  .btn-score.bicycle{grid-column:auto;flex-direction:column;min-height:80px}
+  .game-header{padding-top:calc(var(--safe-t) + 4px);padding-bottom:8px}
+}
+</style>
+</head>
+<body>
+
+<!-- SETUP -->
+<div id="screen-setup" class="screen active" role="main" aria-label="New game setup">
+  <header class="setup-header">
+    <h1 class="app-title">🏏 Car Cricket</h1>
+    <p class="app-subtitle">The road trip scoring game</p>
+  </header>
+  <div class="setup-desc">
+    <strong>How to play:</strong> One player bats at a time. Spot vehicles to score runs. A 🔴 Red Car ends the batter's turn — next player is in! Game continues until someone presses End Game.
+  </div>
+  <section aria-labelledby="players-heading">
+    <label id="players-heading" class="players-label">Players (1–5)</label>
+    <div id="player-inputs">
+      <div class="player-input-row">
+        <input type="text" class="player-name-input" placeholder="Player 1 name" aria-label="Player 1 name" maxlength="30" autocomplete="off">
+        <button class="btn-icon btn-remove" onclick="removePlayerInput(this)" aria-label="Remove player 1" style="display:none">✕</button>
+      </div>
+    </div>
+    <div class="mt8">
+      <button class="btn-add-player" onclick="addPlayerInput()" id="btn-add-player">＋ Add Player</button>
+    </div>
+  </section>
+  <div class="setup-actions">
+    <button class="btn-primary" onclick="onStartGame()">🏏 Start Game</button>
+    <div class="file-btn-wrap">
+      <button class="btn-secondary">📂 Load Saved Game File</button>
+      <input type="file" accept=".txt,.json" onchange="onLoadFile(event)" aria-label="Load saved game file">
+    </div>
+    <button class="btn-ghost" id="btn-set-setup">⚙️ Settings</button>
+  </div>
+</div>
+
+<!-- GAME -->
+<div id="screen-game" class="screen" role="main" aria-label="Game in progress">
+  <header class="game-header" role="banner">
+    <div class="game-header-top">
+      <div class="hero-info">
+        <div class="hero-label" aria-hidden="true">Now Batting</div>
+        <div class="hero-name" id="hero-name" aria-live="polite">—</div>
+        <div class="hero-label" aria-hidden="true">Score</div>
+        <div class="hero-score" id="hero-score" aria-live="polite">0</div>
+      </div>
+      <div class="header-side">
+        <span class="status-badge active" id="status-badge" aria-live="polite">Active</span>
+        <button class="btn-pause" id="btn-pause" onclick="onTogglePause()" aria-label="Pause game">⏸ Pause</button>
+      </div>
+    </div>
+  </header>
+  <div class="paused-banner" id="paused-banner" role="alert">
+    ⚠️ GAME PAUSED – Speed limit is 70 km/h or less
+  </div>
+  <nav class="tab-nav" role="tablist" aria-label="Game sections">
+    <button class="tab-btn active" role="tab" aria-selected="true" id="tab-score" onclick="switchTab('score')">Score</button>
+    <button class="tab-btn" role="tab" aria-selected="false" id="tab-players" onclick="switchTab('players')">Players</button>
+    <button class="tab-btn" role="tab" aria-selected="false" id="tab-trip" onclick="switchTab('trip')">Trip</button>
+    <button class="tab-btn" role="tab" aria-selected="false" id="tab-umpire" onclick="switchTab('umpire')">Umpire</button>
+    <button class="tab-btn" role="tab" aria-selected="false" id="tab-menu" onclick="switchTab('menu')">Menu</button>
+  </nav>
+  <div class="tab-panels">
+
+    <div id="panel-score" class="tab-panel active" role="tabpanel" aria-labelledby="tab-score">
+      <div class="scoring-grid" id="scoring-grid">
+        <button class="btn-score car" onclick="onRecord('car')" aria-label="Car – plus 1 point">
+          <span class="s-icon" aria-hidden="true">🚗</span>
+          <span class="s-label">Car</span>
+          <span class="s-value">+1</span>
+        </button>
+        <button class="btn-score caravan" onclick="onRecord('caravan')" aria-label="Caravan or boat – plus 2 points">
+          <span class="s-icon" aria-hidden="true">🚐</span>
+          <span class="s-label">Caravan / Boat</span>
+          <span class="s-value">+2</span>
+        </button>
+        <button class="btn-score moto" onclick="onRecord('motorbike')" aria-label="Motorbike – plus 5 points">
+          <span class="s-icon" aria-hidden="true">🏍️</span>
+          <span class="s-label">Motorbike</span>
+          <span class="s-value">+5</span>
+        </button>
+        <button class="btn-score bus" onclick="onRecord('bus')" aria-label="Bus or truck – plus 10 points">
+          <span class="s-icon" aria-hidden="true">🚌</span>
+          <span class="s-label">Bus / Truck</span>
+          <span class="s-value">+10</span>
+        </button>
+        <button class="btn-score bicycle" onclick="onRecord('bicycle')" aria-label="Bicycle – minus 20 points">
+          <span class="s-icon" aria-hidden="true">🚲</span>
+          <span class="s-label">Bicycle</span>
+          <span class="s-value">−20</span>
+        </button>
+      </div>
+      <div class="red-car-zone">
+        <div class="red-zone-label" aria-hidden="true">⚠ Danger Zone</div>
+        <button class="btn-red-car" id="btn-red-car" onclick="onRecord('redCar')" aria-label="Red Car – current player is OUT, next player bats">
+          <span class="s-icon" aria-hidden="true">🔴</span>
+          <span>Red Car – OUT</span>
+        </button>
+      </div>
+      <div class="panel-footer"></div>
+    </div>
+
+    <div id="panel-players" class="tab-panel" role="tabpanel" aria-labelledby="tab-players">
+      <div class="sb-header">
+        <span class="sb-title" id="sb-view-label">Batting Order</span>
+        <button class="btn-sort" onclick="toggleSBSort()" id="btn-sb-sort">⇅ By Score</button>
+      </div>
+      <ul class="sb-list" id="sb-list" aria-label="Player scores"></ul>
+      <div class="panel-footer"></div>
+    </div>
+
+    <div id="panel-trip" class="tab-panel" role="tabpanel" aria-labelledby="tab-trip">
+      <h2 class="sec-heading">Trip Vehicle Totals</h2>
+      <table class="summary-tbl" aria-label="Vehicle counts">
+        <thead><tr><th>Vehicle</th><th style="text-align:right">Count</th></tr></thead>
+        <tbody id="trip-tbody"></tbody>
+      </table>
+      <div class="panel-footer"></div>
+    </div>
+
+    <div id="panel-umpire" class="tab-panel" role="tabpanel" aria-labelledby="tab-umpire">
+      <div class="ump-section">
+        <div class="ump-title">Undo / Redo</div>
+        <div class="undo-row">
+          <button class="btn-undo" id="btn-undo" onclick="onUndo()">↩ Undo</button>
+          <button class="btn-redo" id="btn-redo" onclick="onRedo()">↪ Redo</button>
+        </div>
+        <div class="undo-info" id="undo-info" aria-live="polite"></div>
+      </div>
+      <div class="ump-section">
+        <div class="ump-title">Adjust Points</div>
+        <div class="form-row">
+          <label for="ump-psel">Player</label>
+          <select id="ump-psel"></select>
+        </div>
+        <div class="form-inline">
+          <div class="form-row">
+            <label for="ump-pts">Points (use − for subtract)</label>
+            <input type="number" id="ump-pts" placeholder="e.g. 5 or −5" inputmode="numeric">
+          </div>
+          <button class="btn-apply" onclick="onUmpAdjust()">Apply</button>
+        </div>
+      </div>
+      <div class="ump-section">
+        <div class="ump-title">Change Current Batter</div>
+        <div class="form-inline">
+          <div class="form-row">
+            <label for="ump-tsel">Set batter to</label>
+            <select id="ump-tsel"></select>
+          </div>
+          <button class="btn-apply" onclick="onUmpTurn()">Set</button>
+        </div>
+      </div>
+      <div class="ump-section">
+        <div class="ump-title">Correct Vehicle Total</div>
+        <div class="form-row">
+          <label for="ump-vtype">Vehicle</label>
+          <select id="ump-vtype">
+            <option value="car">🚗 Car</option>
+            <option value="caravan">🚐 Caravan / Boat</option>
+            <option value="motorbike">🏍️ Motorbike</option>
+            <option value="bus">🚌 Bus / Truck</option>
+            <option value="bicycle">🚲 Bicycle</option>
+            <option value="redCar">🔴 Red Car</option>
+          </select>
+        </div>
+        <div class="form-inline">
+          <div class="form-row">
+            <label for="ump-vcnt">New total</label>
+            <input type="number" id="ump-vcnt" min="0" placeholder="0" inputmode="numeric">
+          </div>
+          <button class="btn-apply" onclick="onUmpVehicle()">Set</button>
+        </div>
+      </div>
+      <div class="panel-footer"></div>
+    </div>
+
+    <div id="panel-menu" class="tab-panel" role="tabpanel" aria-labelledby="tab-menu">
+      <div class="controls-grid">
+        <button class="btn-secondary" onclick="onEditPlayers()">✏️ Edit Player Names</button>
+        <hr class="ctrl-divider">
+        <button class="btn-secondary" onclick="exportSave()">💾 Save Game File</button>
+        <div class="file-btn-wrap">
+          <button class="btn-secondary">📂 Load Game File</button>
+          <input type="file" accept=".txt,.json" onchange="onLoadFile(event)" aria-label="Load game file">
+        </div>
+        <hr class="ctrl-divider">
+        <button class="btn-warning" onclick="onRestartGame()">🔄 Restart Game</button>
+        <button class="btn-secondary" onclick="onNewGame()">🆕 New Game</button>
+        <hr class="ctrl-divider">
+        <button class="btn-ghost" id="btn-set-game">⚙️ Settings</button>
+        <hr class="ctrl-divider">
+        <button class="btn-danger" onclick="onEndGame()">🏁 End Game</button>
+      </div>
+      <div class="panel-footer"></div>
+    </div>
+
+  </div>
+</div>
+
+<!-- END GAME -->
+<div id="screen-end" class="screen" role="main" aria-label="Game over">
+  <div class="end-header"><h1 class="end-title">🏁 Game Over</h1></div>
+  <div class="winner-box" id="winner-box">
+    <div class="winner-label">Winner</div>
+    <div class="winner-name" id="winner-name">—</div>
+    <div class="winner-score" id="winner-score-txt"></div>
+  </div>
+  <div>
+    <h2 class="end-section-title">Final Leaderboard</h2>
+    <ul class="sb-list" id="end-sb" aria-label="Final scores"></ul>
+  </div>
+  <div>
+    <h2 class="end-section-title">Trip Vehicle Summary</h2>
+    <table class="summary-tbl">
+      <thead><tr><th>Vehicle</th><th style="text-align:right">Total</th></tr></thead>
+      <tbody id="end-trip-tbody"></tbody>
+    </table>
+  </div>
+  <div class="end-actions">
+    <button class="btn-primary" onclick="onContinueGame()">▶ Continue Game</button>
+    <button class="btn-secondary" onclick="onRestartGame()">🔄 Restart With Same Players</button>
+    <button class="btn-secondary" onclick="onNewGame()">🆕 Start New Game</button>
+    <button class="btn-secondary" onclick="exportReport()">📄 Save Results as Text File</button>
+  </div>
+</div>
+
+<!-- SETTINGS -->
+<div id="screen-settings" class="screen" role="main" aria-label="Settings">
+  <header class="settings-hdr">
+    <button class="btn-icon btn-secondary" id="btn-set-back">←</button>
+    <h1 class="settings-title">Settings</h1>
+  </header>
+  <div class="settings-section">
+    <div class="settings-section-title">Audio &amp; Feedback</div>
+    <div class="setting-row">
+      <div class="setting-info"><div class="setting-name">Sound Effects</div><div class="setting-desc">Tones generated by your device</div></div>
+      <label class="toggle"><input type="checkbox" id="set-sound" onchange="onSetChange('sound',this.checked)"><span class="toggle-track"></span></label>
+    </div>
+    <div class="setting-row">
+      <div class="setting-info"><div class="setting-name">Vibration</div><div class="setting-desc">Haptic feedback on supported devices</div></div>
+      <label class="toggle"><input type="checkbox" id="set-vibrate" onchange="onSetChange('vibration',this.checked)"><span class="toggle-track"></span></label>
+    </div>
+  </div>
+  <div class="settings-section">
+    <div class="settings-section-title">Appearance</div>
+    <div class="setting-row">
+      <div class="setting-info"><div class="setting-name">Theme</div></div>
+      <div class="theme-btns" role="group" aria-label="Theme">
+        <button class="theme-btn on" id="theme-system" onclick="setTheme('system')" aria-pressed="true">Auto</button>
+        <button class="theme-btn" id="theme-light" onclick="setTheme('light')" aria-pressed="false">Light</button>
+        <button class="theme-btn" id="theme-dark" onclick="setTheme('dark')" aria-pressed="false">Dark</button>
+      </div>
+    </div>
+    <div class="setting-row">
+      <div class="setting-info"><div class="setting-name">Show Icons on Buttons</div><div class="setting-desc">Display emoji icons on scoring buttons</div></div>
+      <label class="toggle"><input type="checkbox" id="set-icons" onchange="onSetChange('showIcons',this.checked)"><span class="toggle-track"></span></label>
+    </div>
+  </div>
+  <div class="settings-section">
+    <div class="settings-section-title">Gameplay</div>
+    <div class="setting-row">
+      <div class="setting-info"><div class="setting-name">Confirm Before Red Car</div><div class="setting-desc">Ask before recording a Red Car out</div></div>
+      <label class="toggle"><input type="checkbox" id="set-confirm-red" onchange="onSetChange('confirmRedCar',this.checked)"><span class="toggle-track"></span></label>
+    </div>
+    <div class="setting-row">
+      <div class="setting-info"><div class="setting-name">Enable Redo</div><div class="setting-desc">Show Redo button in Umpire controls</div></div>
+      <label class="toggle"><input type="checkbox" id="set-redo" onchange="onSetChange('enableRedo',this.checked)"><span class="toggle-track"></span></label>
+    </div>
+  </div>
+  <div class="settings-section">
+    <div class="settings-section-title">Data</div>
+    <div class="setting-row" style="flex-direction:column;align-items:stretch;gap:10px">
+      <button class="btn-danger" onclick="onResetData()">⚠️ Reset All Saved Data</button>
+    </div>
+  </div>
+  <div class="settings-footer"></div>
+</div>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+  <div class="modal-dialog">
+    <h2 class="modal-title" id="modal-title">Confirm</h2>
+    <p class="modal-msg" id="modal-msg"></p>
+    <div id="modal-extra"></div>
+    <div class="modal-actions" id="modal-btns"></div>
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ── Constants ──────────────────────────────────────────
+const LS_GAME='carcricket-v1', LS_SET='carcricket-settings', SAVE_VER=1, MAX_HIST=100, DEBOUNCE=320;
+const V_SCORES={car:1,caravan:2,motorbike:5,bus:10,bicycle:-20,redCar:0};
+const V_LABELS={car:'🚗 Car',caravan:'🚐 Caravan / Boat',motorbike:'🏍️ Motorbike',bus:'🚌 Bus / Truck',bicycle:'🚲 Bicycle',redCar:'🔴 Red Car'};
+const V_KEYS=['car','caravan','motorbike','bus','bicycle','redCar'];
+const DEF_SET={sound:true,vibration:true,theme:'system',confirmRedCar:false,showIcons:true,enableRedo:true};
+
+// ── Mutable state ──────────────────────────────────────
+let GS=null, sbByScore=false, lastTap=0, setFrom='setup', aCtx=null;
+
+// ── Utilities ──────────────────────────────────────────
+const clone=o=>JSON.parse(JSON.stringify(o));
+const isoToday=()=>new Date().toISOString().split('T')[0];
+const niceDate=iso=>{try{return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});}catch(e){return iso||isoToday();}};
+const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+
+// ── Settings ───────────────────────────────────────────
+function loadSet(){try{const r=localStorage.getItem(LS_SET);if(r)return Object.assign({},DEF_SET,JSON.parse(r));}catch(e){}return Object.assign({},DEF_SET);}
+function saveSet(s){try{localStorage.setItem(LS_SET,JSON.stringify(s));}catch(e){}}
+function getSet(){return GS?GS.settings:loadSet();}
+
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme',t||'system');
+  ['system','light','dark'].forEach(n=>{const b=document.getElementById('theme-'+n);if(b){b.classList.toggle('on',n===t);b.setAttribute('aria-pressed',n===t?'true':'false');}});
+}
+function populateSetUI(){
+  const s=getSet();
+  const chk=(id,v)=>{const el=document.getElementById(id);if(el)el.checked=!!v;};
+  chk('set-sound',s.sound); chk('set-vibrate',s.vibration);
+  chk('set-icons',s.showIcons!==false); chk('set-confirm-red',s.confirmRedCar); chk('set-redo',s.enableRedo!==false);
+  applyTheme(s.theme||'system');
+}
+function onSetChange(key,val){
+  const s=GS?GS.settings:loadSet(); s[key]=val;
+  if(GS){GS.settings=s;saveGame();}else saveSet(s);
+  if(key==='showIcons')refreshIcons();
+  if(key==='enableRedo')refreshRedo();
+}
+function setTheme(t){
+  applyTheme(t);
+  const s=GS?GS.settings:loadSet(); s.theme=t;
+  if(GS){GS.settings=s;saveGame();}else saveSet(s);
+}
+function refreshIcons(){
+  const show=getSet().showIcons!==false;
+  document.querySelectorAll('.s-icon').forEach(el=>el.style.display=show?'':'none');
+}
+function refreshRedo(){
+  const en=getSet().enableRedo!==false;
+  const b=document.getElementById('btn-redo');if(b)b.style.display=en?'':'none';
+}
+
+// ── Audio ──────────────────────────────────────────────
+function getACtx(){if(!aCtx){try{aCtx=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}}return aCtx;}
+function playSound(type){
+  if(!getSet().sound)return;
+  const ctx=getACtx();if(!ctx)return;
+  try{
+    const osc=ctx.createOscillator(),g=ctx.createGain();
+    osc.connect(g);g.connect(ctx.destination);
+    const t=ctx.currentTime;
+    if(type==='score'){osc.frequency.setValueAtTime(660,t);osc.frequency.exponentialRampToValueAtTime(900,t+0.1);g.gain.setValueAtTime(0.28,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.22);osc.start(t);osc.stop(t+0.22);}
+    else if(type==='out'){osc.type='sawtooth';osc.frequency.setValueAtTime(440,t);osc.frequency.exponentialRampToValueAtTime(180,t+0.45);g.gain.setValueAtTime(0.35,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.45);osc.start(t);osc.stop(t+0.45);}
+    else if(type==='neg'){osc.frequency.setValueAtTime(260,t);g.gain.setValueAtTime(0.28,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.2);osc.start(t);osc.stop(t+0.2);}
+    else{osc.frequency.setValueAtTime(780,t);g.gain.setValueAtTime(0.12,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.08);osc.start(t);osc.stop(t+0.08);}
+  }catch(e){}
+}
+function vibrate(pat){if(!getSet().vibration)return;try{if(navigator.vibrate)navigator.vibrate(pat);}catch(e){}}
+
+// ── Storage ────────────────────────────────────────────
+function saveGame(){if(!GS)return;GS.lastUpdatedAt=new Date().toISOString();try{localStorage.setItem(LS_GAME,JSON.stringify(GS));}catch(e){}}
+function loadGame(){try{const r=localStorage.getItem(LS_GAME);if(!r)return null;const d=JSON.parse(r);return validate(d)?d:null;}catch(e){return null;}}
+function validate(d){
+  if(!d||typeof d!=='object')return false;
+  if(!Array.isArray(d.players)||d.players.length<1||d.players.length>5)return false;
+  for(const p of d.players)if(typeof p.name!=='string'||typeof p.score!=='number')return false;
+  if(typeof d.currentPlayerIndex!=='number')return false;
+  if(typeof d.isPaused!=='boolean')return false;
+  if(!d.vehicleTotals||typeof d.vehicleTotals!=='object')return false;
+  return true;
+}
+
+// ── History ────────────────────────────────────────────
+function mkSnap(){return{players:clone(GS.players),currentPlayerIndex:GS.currentPlayerIndex,isPaused:GS.isPaused,isGameEnded:GS.isGameEnded,vehicleTotals:clone(GS.vehicleTotals)};}
+function pushHist(){GS.actionHistory.push(mkSnap());if(GS.actionHistory.length>MAX_HIST)GS.actionHistory.shift();GS.redoHistory=[];}
+function applySnap(s){GS.players=s.players;GS.currentPlayerIndex=s.currentPlayerIndex;GS.isPaused=s.isPaused;GS.isGameEnded=s.isGameEnded;GS.vehicleTotals=s.vehicleTotals;}
+
+// ── Game Logic ─────────────────────────────────────────
+function mkState(names,settings){
+  return{saveFormatVersion:SAVE_VER,players:names.map(n=>({name:n.trim(),score:0})),currentPlayerIndex:0,isPaused:false,isGameEnded:false,
+    vehicleTotals:{car:0,caravan:0,motorbike:0,bus:0,bicycle:0,redCar:0},
+    actionHistory:[],redoHistory:[],settings:settings||clone(DEF_SET),
+    gameStartedAt:new Date().toISOString(),lastUpdatedAt:new Date().toISOString()};
+}
+
+function startGame(names){GS=mkState(names,loadSet());sbByScore=false;saveGame();showScreen('game');render();}
+
+function recordVehicle(type){
+  if(!GS||GS.isPaused||GS.isGameEnded)return;
+  const now=Date.now();if(now-lastTap<DEBOUNCE)return;lastTap=now;
+  pushHist();
+  GS.vehicleTotals[type]=(GS.vehicleTotals[type]||0)+1;
+  if(type==='redCar'){playSound('out');vibrate([80,40,80,40,80]);GS.currentPlayerIndex=(GS.currentPlayerIndex+1)%GS.players.length;}
+  else{const pts=V_SCORES[type];GS.players[GS.currentPlayerIndex].score+=pts;pts<0?(playSound('neg'),vibrate([200])):(playSound('score'),vibrate([30]));}
+  saveGame();render();
+}
+
+function togglePause(){if(!GS||GS.isGameEnded)return;pushHist();GS.isPaused=!GS.isPaused;saveGame();render();}
+
+function doUndo(){
+  if(!GS||!GS.actionHistory.length)return false;
+  GS.redoHistory.push(mkSnap());applySnap(GS.actionHistory.pop());
+  saveGame();render();playSound('ui');return true;
+}
+function doRedo(){
+  if(!GS||!GS.redoHistory.length)return false;
+  GS.actionHistory.push(mkSnap());applySnap(GS.redoHistory.pop());
+  saveGame();render();playSound('ui');return true;
+}
+
+function restartGame(){
+  if(!GS)return;
+  GS=mkState(GS.players.map(p=>p.name),clone(GS.settings));
+  sbByScore=false;saveGame();showScreen('game');render();
+}
+
+function endGame(){if(!GS)return;pushHist();GS.isGameEnded=true;saveGame();showEndScreen();}
+
+// ── Render ─────────────────────────────────────────────
+function render(){
+  if(!GS)return;
+  const cp=GS.players[GS.currentPlayerIndex];
+  document.getElementById('hero-name').textContent=cp.name;
+  const se=document.getElementById('hero-score');se.textContent=cp.score;se.classList.toggle('neg',cp.score<0);
+  const paused=GS.isPaused;
+  const badge=document.getElementById('status-badge'),pb=document.getElementById('btn-pause'),banner=document.getElementById('paused-banner');
+  badge.textContent=paused?'Paused':'Active';badge.className='status-badge '+(paused?'paused':'active');
+  pb.textContent=paused?'▶ Resume':'⏸ Pause';pb.setAttribute('aria-label',paused?'Resume game':'Pause game');
+  pb.classList.toggle('is-paused',paused);banner.classList.toggle('show',paused);
+  const dis=paused||GS.isGameEnded;
+  document.querySelectorAll('#scoring-grid .btn-score,#btn-red-car').forEach(b=>b.disabled=dis);
+  const ub=document.getElementById('btn-undo'),rb=document.getElementById('btn-redo');
+  if(ub)ub.disabled=!GS.actionHistory.length;if(rb)rb.disabled=!GS.redoHistory.length;
+  const ui=document.getElementById('undo-info');if(ui){const h=GS.actionHistory.length;ui.textContent=h?`${h} action${h===1?'':'s'} in history`:'No actions to undo';}
+  renderSB();renderTrip(document.getElementById('trip-tbody'));renderUmpSels();refreshIcons();refreshRedo();
+}
+
+function renderSB(){
+  const list=document.getElementById('sb-list');if(!list||!GS)return;
+  let ps=GS.players.map((p,i)=>({...p,idx:i}));
+  if(sbByScore)ps=[...ps].sort((a,b)=>b.score-a.score);
+  list.innerHTML=ps.map((p,rank)=>{
+    const cur=p.idx===GS.currentPlayerIndex;
+    return`<li class="sb-item${cur?' current':''}" aria-label="${esc(p.name)}: ${p.score} points${cur?', batting':''}">
+      <span class="sb-rank" aria-hidden="true">${sbByScore?rank+1:p.idx+1}</span>
+      <span class="sb-name">${esc(p.name)}</span>
+      ${cur?'<span class="batting-badge" aria-hidden="true">Batting</span>':''}
+      <span class="sb-score">${p.score}</span></li>`;
+  }).join('');
+}
+
+function renderTrip(tbody){
+  if(!tbody||!GS)return;
+  const vt=GS.vehicleTotals,total=V_KEYS.reduce((a,k)=>a+(vt[k]||0),0);
+  tbody.innerHTML=V_KEYS.map(k=>`<tr><td>${V_LABELS[k]}</td><td class="cnt">${vt[k]||0}</td></tr>`).join('')
+    +`<tr class="total-row"><td><strong>Total Events</strong></td><td class="cnt"><strong>${total}</strong></td></tr>`;
+}
+
+function renderUmpSels(){
+  if(!GS)return;
+  ['ump-psel','ump-tsel'].forEach(id=>{
+    const sel=document.getElementById(id);if(!sel)return;
+    const prev=sel.value;
+    sel.innerHTML=GS.players.map((p,i)=>`<option value="${i}">${esc(p.name)}</option>`).join('');
+    if(prev!==''&&sel.querySelector(`option[value="${prev}"]`))sel.value=prev;
+    if(id==='ump-tsel')sel.value=String(GS.currentPlayerIndex);
+  });
+}
+
+function showEndScreen(){
+  if(!GS)return;
+  const sorted=[...GS.players].map((p,i)=>({...p,idx:i})).sort((a,b)=>b.score-a.score);
+  const top=sorted[0].score,winners=sorted.filter(p=>p.score===top);
+  document.getElementById('winner-name').textContent=winners.length===1?winners[0].name:winners.map(w=>w.name).join(' & ');
+  document.getElementById('winner-score-txt').textContent=winners.length===1?`Score: ${winners[0].score}`:`Tied at ${top} points`;
+  document.getElementById('end-sb').innerHTML=sorted.map((p,rank)=>
+    `<li class="sb-item${rank===0?' current':''}" aria-label="${esc(p.name)}: ${p.score}${rank===0?', winner':''}">
+      <span class="sb-rank" aria-hidden="true">${rank+1}</span>
+      <span class="sb-name">${esc(p.name)}</span>
+      ${rank===0?'<span class="batting-badge" aria-hidden="true">Winner</span>':''}
+      <span class="sb-score">${p.score}</span></li>`).join('');
+  renderTrip(document.getElementById('end-trip-tbody'));
+  showScreen('end');
+}
+
+// ── Navigation ─────────────────────────────────────────
+function showScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const t=document.getElementById('screen-'+name);if(t)t.classList.add('active');}
+function switchTab(name){
+  document.querySelectorAll('.tab-btn').forEach(b=>{const on=b.id==='tab-'+name;b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false');});
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
+}
+function toggleSBSort(){
+  sbByScore=!sbByScore;
+  document.getElementById('sb-view-label').textContent=sbByScore?'Leaderboard':'Batting Order';
+  document.getElementById('btn-sb-sort').textContent=sbByScore?'⇅ By Order':'⇅ By Score';
+  renderSB();
+}
+
+// ── Event Handlers ─────────────────────────────────────
+function onStartGame(){
+  const inputs=[...document.querySelectorAll('.player-name-input')];
+  const names=[];let ok=true;
+  inputs.forEach(inp=>{const v=inp.value.trim();const bad=!v;inp.style.borderColor=bad?'var(--c-danger)':'';inp.setAttribute('aria-invalid',bad?'true':'false');if(bad)ok=false;else names.push(v);});
+  if(!ok||!names.length){showModal('Names Required','Please enter a name for every player before starting.',[{label:'OK',action:closeModal,primary:true}]);return;}
+  startGame(names);
+}
+
+function onTogglePause(){togglePause();}
+
+function onRecord(type){
+  if(!GS||GS.isPaused||GS.isGameEnded)return;
+  if(type==='redCar'&&GS.settings.confirmRedCar){
+    const cp=GS.players[GS.currentPlayerIndex];
+    showModal('🔴 Red Car – OUT',`Confirm: ${cp.name} is OUT. Turn moves to the next player.`,[
+      {label:'Yes, OUT!',action:()=>{closeModal();recordVehicle('redCar');},danger:true},
+      {label:'Cancel',action:closeModal}]);
+    return;
+  }
+  recordVehicle(type);
+}
+
+function onUndo(){if(!doUndo())showModal('Nothing to Undo','There are no actions to undo.',[{label:'OK',action:closeModal,primary:true}]);}
+function onRedo(){if(!doRedo())showModal('Nothing to Redo','There are no actions to redo.',[{label:'OK',action:closeModal,primary:true}]);}
+
+function onUmpAdjust(){
+  const idx=parseInt(document.getElementById('ump-psel').value,10);
+  const pts=parseInt(document.getElementById('ump-pts').value,10);
+  if(!GS||isNaN(idx)||isNaN(pts)){showModal('Invalid Input','Select a player and enter a valid number.',[{label:'OK',action:closeModal,primary:true}]);return;}
+  pushHist();GS.players[idx].score+=pts;document.getElementById('ump-pts').value='';saveGame();render();playSound('ui');
+}
+function onUmpTurn(){
+  const idx=parseInt(document.getElementById('ump-tsel').value,10);
+  if(!GS||isNaN(idx))return;
+  pushHist();GS.currentPlayerIndex=idx;saveGame();render();playSound('ui');
+}
+function onUmpVehicle(){
+  const type=document.getElementById('ump-vtype').value;
+  const cnt=parseInt(document.getElementById('ump-vcnt').value,10);
+  if(!GS||!type||isNaN(cnt)||cnt<0){showModal('Invalid Input','Select a vehicle and enter a count of 0 or more.',[{label:'OK',action:closeModal,primary:true}]);return;}
+  pushHist();GS.vehicleTotals[type]=cnt;document.getElementById('ump-vcnt').value='';saveGame();render();playSound('ui');
+}
+
+function onEndGame(){
+  if(!GS)return;
+  showModal('🏁 End Game','End the game now? You can continue from the End Game screen if you change your mind.',[
+    {label:'End Game',action:()=>{closeModal();endGame();},danger:true},
+    {label:'Cancel',action:closeModal}]);
+}
+function onRestartGame(){
+  showModal('🔄 Restart Game','Reset all scores and vehicle totals to zero? Player names will stay the same.',[
+    {label:'Restart',action:()=>{closeModal();restartGame();},danger:true},
+    {label:'Cancel',action:closeModal}]);
+}
+function onNewGame(){
+  showModal('🆕 New Game','Return to player setup? The current game is saved and can be reloaded.',[
+    {label:'New Game',action:()=>{closeModal();showScreen('setup');resetSetup();},primary:true},
+    {label:'Cancel',action:closeModal}]);
+}
+function onContinueGame(){
+  if(!GS)return;pushHist();GS.isGameEnded=false;saveGame();showScreen('game');render();
+}
+function onEditPlayers(){
+  if(!GS)return;
+  const fields=GS.players.map((p,i)=>
+    `<div style="margin-bottom:10px"><label style="font-size:0.85rem;font-weight:600;display:block;margin-bottom:4px">Player ${i+1}</label>
+    <input type="text" class="ep-inp" data-idx="${i}" value="${esc(p.name)}" maxlength="30"
+    style="width:100%;padding:10px 12px;border:2px solid var(--c-border);border-radius:8px;background:var(--c-surface);color:var(--c-text);font-size:1rem" aria-label="Player ${i+1} name"></div>`
+  ).join('');
+  showModal('✏️ Edit Player Names','Edit names below. Scores will not change.',[
+    {label:'Save Names',action:saveEditedNames,primary:true},{label:'Cancel',action:closeModal}],fields);
+}
+function saveEditedNames(){
+  const inputs=[...document.querySelectorAll('.ep-inp')];let ok=true;const names=[];
+  inputs.forEach(inp=>{const v=inp.value.trim();if(!v){inp.style.borderColor='var(--c-danger)';ok=false;}else{inp.style.borderColor='';names.push(v);}});
+  if(!ok)return;
+  pushHist();names.forEach((n,i)=>{if(GS.players[i])GS.players[i].name=n;});
+  saveGame();closeModal();render();
+}
+function onResetData(){
+  showModal('⚠️ Reset All Data','Permanently delete all saved games and settings? This cannot be undone.',[
+    {label:'Reset Everything',action:()=>{closeModal();try{localStorage.clear();}catch(e){}GS=null;applyTheme('system');showScreen('setup');resetSetup();},danger:true},
+    {label:'Cancel',action:closeModal}]);
+}
+function onLoadFile(event){
+  const f=event.target.files&&event.target.files[0];if(!f)return;event.target.value='';importFile(f);
+}
+
+// ── Setup Helpers ──────────────────────────────────────
+function addPlayerInput(){
+  const c=document.getElementById('player-inputs');
+  if(c.querySelectorAll('.player-input-row').length>=5)return;
+  const n=c.querySelectorAll('.player-input-row').length+1;
+  const row=document.createElement('div');row.className='player-input-row';
+  row.innerHTML=`<input type="text" class="player-name-input" placeholder="Player ${n} name" aria-label="Player ${n} name" maxlength="30" autocomplete="off">
+    <button class="btn-icon btn-remove" onclick="removePlayerInput(this)" aria-label="Remove player ${n}">✕</button>`;
+  c.appendChild(row);row.querySelector('input').focus();refreshSetup();
+}
+function removePlayerInput(btn){btn.closest('.player-input-row').remove();refreshSetup();}
+function refreshSetup(){
+  const rows=[...document.getElementById('player-inputs').querySelectorAll('.player-input-row')];
+  rows.forEach((row,i)=>{
+    const inp=row.querySelector('input'),rb=row.querySelector('.btn-remove');
+    if(inp){inp.placeholder=`Player ${i+1} name`;inp.setAttribute('aria-label',`Player ${i+1} name`);}
+    if(rb){rb.style.display=rows.length>1?'':'none';rb.setAttribute('aria-label',`Remove player ${i+1}`);}
+  });
+  const ab=document.getElementById('btn-add-player');if(ab)ab.disabled=rows.length>=5;
+}
+function resetSetup(){
+  document.getElementById('player-inputs').innerHTML=
+    `<div class="player-input-row"><input type="text" class="player-name-input" placeholder="Player 1 name" aria-label="Player 1 name" maxlength="30" autocomplete="off">
+    <button class="btn-icon btn-remove" onclick="removePlayerInput(this)" aria-label="Remove player 1" style="display:none">✕</button></div>`;
+  const ab=document.getElementById('btn-add-player');if(ab)ab.disabled=false;
+}
+
+// ── Modal ──────────────────────────────────────────────
+function showModal(title,msg,actions,extraHtml){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-msg').textContent=msg;
+  const ex=document.getElementById('modal-extra');ex.innerHTML=extraHtml||'';
+  const ab=document.getElementById('modal-btns');ab.innerHTML='';
+  (actions||[]).forEach(a=>{const b=document.createElement('button');b.textContent=a.label;b.className=a.danger?'btn-danger':(a.primary?'btn-primary':'btn-secondary');b.onclick=a.action;ab.appendChild(b);});
+  document.getElementById('modal').classList.add('show');
+  setTimeout(()=>{const f=ab.querySelector('button');if(f)f.focus();},60);
+}
+function closeModal(){document.getElementById('modal').classList.remove('show');document.getElementById('modal-extra').innerHTML='';}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
+
+// ── File I/O ───────────────────────────────────────────
+function exportSave(){
+  if(!GS)return;
+  downloadText(JSON.stringify(GS,null,2),`car-cricket-game-${isoToday()}.txt`);
+}
+function importFile(file){
+  const reader=new FileReader();
+  reader.onload=e=>{
+    let data;try{data=JSON.parse(e.target.result);}catch(err){showModal('File Error','Could not read the file. It may be damaged or not a valid Car Cricket save file.',[{label:'OK',action:closeModal,primary:true}]);return;}
+    if(!validate(data)){showModal('Invalid File','This does not appear to be a valid Car Cricket save file.',[{label:'OK',action:closeModal,primary:true}]);return;}
+    showModal('📂 Load Game',GS?'Loading this file will replace your current game. Are you sure?':'Load this saved game?',[
+      {label:'Load Game',action:()=>{
+        closeModal();GS=data;
+        if(!Array.isArray(GS.redoHistory))GS.redoHistory=[];
+        if(!Array.isArray(GS.actionHistory))GS.actionHistory=[];
+        saveGame();GS.isGameEnded?showEndScreen():(showScreen('game'),render());
+      },primary:true},
+      {label:'Cancel',action:closeModal}]);
+  };
+  reader.onerror=()=>showModal('File Error','Could not read the file.',[{label:'OK',action:closeModal,primary:true}]);
+  reader.readAsText(file);
+}
+function exportReport(){
+  if(!GS)return;
+  const sorted=[...GS.players].sort((a,b)=>b.score-a.score);
+  const top=sorted[0].score,winners=sorted.filter(p=>p.score===top);
+  const vt=GS.vehicleTotals,total=V_KEYS.reduce((a,k)=>a+(vt[k]||0),0);
+  const negs=sorted.filter(p=>p.score<0);
+  const date=GS.gameStartedAt?niceDate(GS.gameStartedAt):isoToday();
+  const lines=[
+    '================================','      CAR CRICKET RESULTS       ','================================','',
+    `Date: ${date}`,'',
+    '--- WINNER ---',
+    winners.length===1?`${winners[0].name} with ${winners[0].score} points!`:`TIE: ${winners.map(w=>w.name).join(' and ')} with ${top} points each`,
+    '','--- FINAL SCORES ---',
+    ...sorted.map((p,i)=>`${i+1}. ${p.name}: ${p.score}${p.score<0?' (negative)':''}`),
+    '','--- VEHICLE TOTALS ---',
+    `Cars:                    ${vt.car||0}`,`Caravans / Boats:        ${vt.caravan||0}`,
+    `Motorbikes:              ${vt.motorbike||0}`,`Buses / Trucks:          ${vt.bus||0}`,
+    `Bicycles:                ${vt.bicycle||0}`,`Red Cars (outs):         ${vt.redCar||0}`,
+    `Total Vehicle Events:    ${total}`,
+    '','--- NOTES ---',
+    negs.length?`Players with negative score: ${negs.map(p=>p.name).join(', ')}`:'No players finished with a negative score.',
+    '','================================','Generated by Car Cricket App','================================'
+  ];
+  downloadText(lines.join('\n'),`car-cricket-report-${isoToday()}.txt`);
+}
+function downloadText(text,filename){
+  const blob=new Blob([text],{type:'text/plain'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');a.href=url;a.download=filename;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+
+// ── Settings screen wiring ─────────────────────────────
+function openSettings(from){setFrom=from||'setup';populateSetUI();showScreen('settings');}
+document.getElementById('btn-set-back').addEventListener('click',()=>{showScreen(setFrom);if(setFrom==='game'&&GS)render();});
+document.getElementById('btn-set-setup').addEventListener('click',()=>openSettings('setup'));
+document.getElementById('btn-set-game').addEventListener('click',()=>openSettings('game'));
+
+// ── Init ───────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded',()=>{
+  const s=loadSet();applyTheme(s.theme||'system');populateSetUI();
+  const saved=loadGame();
+  if(saved){
+    const names=saved.players.map(p=>p.name).join(', ');
+    const scores=saved.players.map(p=>`${p.name}: ${p.score}`).join(' | ');
+    showModal('🏏 Resume Game?',`Previous game found:\n${names}\n\nScores: ${scores}`,[
+      {label:'Resume Game',action:()=>{
+        closeModal();GS=saved;
+        if(!Array.isArray(GS.redoHistory))GS.redoHistory=[];
+        if(!Array.isArray(GS.actionHistory))GS.actionHistory=[];
+        GS.isGameEnded?showEndScreen():(showScreen('game'),render());
+      },primary:true},
+      {label:'New Game',action:()=>{closeModal();showScreen('setup');}},
+      {label:'Load File',action:()=>{
+        closeModal();
+        const inp=document.createElement('input');inp.type='file';inp.accept='.txt,.json';
+        inp.onchange=onLoadFile;document.body.appendChild(inp);inp.click();document.body.removeChild(inp);
+      }}
+    ]);
+  }else{showScreen('setup');}
+});
+</script>
+</body>
+</html>
