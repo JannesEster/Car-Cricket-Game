@@ -54,14 +54,15 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
 .screen{display:none;min-height:100dvh;padding:calc(var(--safe-t) + 12px) calc(var(--safe-r) + 16px) calc(var(--safe-b) + 16px) calc(var(--safe-l) + 16px)}
 .screen.active{display:flex;flex-direction:column}
 
-/* SETUP */
+/* ── SETUP ─────────────────────────────────────────── */
 #screen-setup{max-width:500px;margin:0 auto;width:100%;gap:20px;align-items:stretch}
 .setup-header{text-align:center;padding:20px 0 4px}
 .app-title{font-size:clamp(2.4rem,9vw,3.8rem);font-weight:900;color:var(--c-primary);letter-spacing:-1px;line-height:1}
 .app-subtitle{font-size:1.05rem;color:var(--c-muted);margin-top:6px}
 .setup-desc{background:var(--c-surface);border-radius:var(--radius);padding:14px 16px;font-size:0.92rem;color:var(--c-muted);border-left:4px solid var(--c-accent);line-height:1.5}
 .setup-desc strong{color:var(--c-text)}
-.players-label{font-weight:700;font-size:1.05rem;display:block;margin-bottom:10px}
+.section-label{font-weight:700;font-size:1.05rem;display:block;margin-bottom:10px}
+.section-label .optional{font-weight:400;font-size:0.82rem;color:var(--c-muted)}
 .player-input-row{display:flex;gap:8px;margin-bottom:10px;align-items:center}
 .player-input-row input{flex:1}
 .btn-icon{width:var(--touch);min-width:var(--touch);height:var(--touch);padding:0;display:flex;align-items:center;justify-content:center;font-size:1.3rem;border-radius:var(--radius-sm);flex-shrink:0}
@@ -74,16 +75,35 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
 .btn-danger{background:var(--c-danger);color:#fff}
 .btn-warning{background:var(--c-warning);color:#fff}
 .mt8{margin-top:8px}
+/* Trip fields */
+.trip-fields{display:flex;flex-direction:column;gap:10px}
+/* Game mode */
+.mode-opts{display:flex;flex-direction:column;gap:8px}
+.mode-opt{display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--c-surface);border:2px solid var(--c-border);border-radius:var(--radius-sm);cursor:pointer;transition:border-color 0.15s}
+.mode-opt.chosen{border-color:var(--c-primary);background:var(--c-surface2)}
+.mode-opt input[type="radio"]{width:20px;height:20px;flex-shrink:0;accent-color:var(--c-primary)}
+.mode-opt-text{font-weight:600;font-size:0.95rem;flex:1;display:flex;align-items:center;flex-wrap:wrap;gap:6px}
+.target-pts-input{width:76px;min-height:40px;padding:4px 10px;font-size:1rem;display:inline-block;border:2px solid var(--c-border);border-radius:6px;background:var(--c-surface);color:var(--c-text);font-weight:700;text-align:center}
+.target-pts-input:focus{outline:2px solid var(--c-accent);border-color:var(--c-accent)}
 
-/* GAME */
+/* ── GAME ──────────────────────────────────────────── */
 #screen-game{padding:0;gap:0}
 .game-header{background:var(--c-primary);color:#fff;padding:calc(var(--safe-t) + 10px) calc(var(--safe-r) + 16px) 14px calc(var(--safe-l) + 16px)}
-.game-header-top{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.game-header-top{display:flex;align-items:flex-start;gap:10px}
 .hero-info{flex:1;min-width:0}
 .hero-label{font-size:0.8rem;opacity:0.75;text-transform:uppercase;letter-spacing:1.2px;font-weight:600}
-.hero-name{font-size:clamp(1.9rem,7.5vw,3.5rem);font-weight:900;line-height:1.1;word-break:break-word;margin:2px 0}
-.hero-score{font-size:clamp(3.2rem,14vw,6.5rem);font-weight:900;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-2px}
+.hero-name{font-size:clamp(1.6rem,6.5vw,3rem);font-weight:900;line-height:1.1;word-break:break-word;margin:2px 0}
+.hero-score{font-size:clamp(2.8rem,12vw,5.5rem);font-weight:900;line-height:1;font-variant-numeric:tabular-nums;letter-spacing:-2px}
 .hero-score.neg{color:#ffaaaa}
+.hero-target{font-size:0.75rem;font-weight:700;opacity:0.8;margin-top:2px;letter-spacing:0.5px}
+/* Mini leaderboard */
+.mini-lb{display:flex;flex-direction:column;gap:5px;align-self:center;flex-shrink:0;min-width:0;padding:0 4px}
+.trophy-row{display:flex;align-items:center;gap:4px;font-size:0.8rem;line-height:1.3;color:rgba(255,255,255,0.92)}
+.trophy-emoji{font-size:1.05rem;flex-shrink:0;line-height:1}
+.trophy-name{max-width:68px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.trophy-pts{font-weight:900;font-variant-numeric:tabular-nums;margin-left:2px}
+@media (max-width:340px){.mini-lb{display:none}}
+/* Header side */
 .header-side{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}
 .status-badge{display:inline-block;padding:4px 10px;border-radius:20px;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;white-space:nowrap}
 .status-badge.active{background:rgba(39,174,96,0.25);color:#6ae89a;border:1px solid rgba(39,174,96,0.4)}
@@ -93,10 +113,10 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
 .paused-banner{display:none;background:var(--c-accent);color:#1a1a00;text-align:center;padding:9px 16px;font-weight:700;font-size:0.92rem;flex-shrink:0}
 .paused-banner.show{display:block}
 
-/* TABS */
+/* ── TABS ──────────────────────────────────────────── */
 .tab-nav{display:flex;background:var(--c-surface);border-bottom:2px solid var(--c-border);overflow-x:auto;scrollbar-width:none;flex-shrink:0}
 .tab-nav::-webkit-scrollbar{display:none}
-.tab-btn{flex:1;min-width:64px;padding:11px 6px;background:none;color:var(--c-muted);border-radius:0;border-bottom:3px solid transparent;font-size:0.78rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;min-height:48px;white-space:nowrap}
+.tab-btn{flex:1;min-width:60px;padding:11px 6px;background:none;color:var(--c-muted);border-radius:0;border-bottom:3px solid transparent;font-size:0.75rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;min-height:48px;white-space:nowrap}
 .tab-btn.active{color:var(--c-primary);border-bottom-color:var(--c-primary)}
 .tab-btn:active{filter:none}
 .tab-panels{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
@@ -104,7 +124,7 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
 .tab-panel.active{display:block}
 .panel-footer{height:calc(var(--safe-b) + 8px)}
 
-/* SCORING BUTTONS */
+/* ── SCORING BUTTONS ───────────────────────────────── */
 .scoring-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px}
 .btn-score{background:var(--c-surface);color:var(--c-text);border:2px solid var(--c-border);font-weight:700;padding:14px 10px;min-height:84px;border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;line-height:1.2;text-align:center}
 .btn-score .s-icon{font-size:1.7rem;line-height:1;display:block}
@@ -121,7 +141,7 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
 .btn-red-car{background:var(--c-danger);color:#fff;width:100%;font-size:1.1rem;font-weight:800;min-height:76px;border-radius:var(--radius);display:flex;align-items:center;justify-content:center;gap:14px;letter-spacing:0.5px;border:3px solid var(--c-danger-dk)}
 .btn-red-car .s-icon{font-size:2rem}
 
-/* SCOREBOARD */
+/* ── SCOREBOARD ────────────────────────────────────── */
 .sb-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
 .sb-title{font-weight:700;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.5px;color:var(--c-muted)}
 .btn-sort{background:var(--c-surface2);color:var(--c-text);border:1px solid var(--c-border);font-size:0.8rem;padding:6px 12px;min-height:38px;font-weight:600}
@@ -133,7 +153,7 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
 .batting-badge{font-size:0.68rem;font-weight:700;text-transform:uppercase;letter-spacing:1px;background:var(--c-accent);color:#1a1a00;padding:2px 8px;border-radius:12px;white-space:nowrap;flex-shrink:0}
 .sb-score{font-size:1.4rem;font-weight:900;font-variant-numeric:tabular-nums;min-width:48px;text-align:right}
 
-/* TRIP SUMMARY */
+/* ── SUMMARY TABLE ─────────────────────────────────── */
 .summary-tbl{width:100%;border-collapse:collapse;background:var(--c-surface);border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.07)}
 .summary-tbl th{background:var(--c-primary);color:#fff;padding:11px 16px;text-align:left;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.5px}
 .summary-tbl td{padding:11px 16px;border-bottom:1px solid var(--c-border);font-size:0.98rem}
@@ -142,7 +162,7 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
 .summary-tbl .cnt{font-weight:800;font-size:1.1rem;text-align:right}
 .summary-tbl .total-row td{font-weight:700;background:var(--c-surface2)!important}
 
-/* UMPIRE */
+/* ── UMPIRE ────────────────────────────────────────── */
 .ump-section{background:var(--c-surface);border:2px solid var(--c-border);border-radius:var(--radius);padding:14px;margin-bottom:12px}
 .ump-title{font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;color:var(--c-muted);margin-bottom:10px}
 .undo-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -157,10 +177,18 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
 .ctrl-divider{border:none;border-top:2px solid var(--c-border);margin:4px 0}
 .sec-heading{font-size:0.9rem;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
 
-/* END GAME */
+/* ── END GAME ──────────────────────────────────────── */
 #screen-end{max-width:540px;margin:0 auto;width:100%;gap:18px}
 .end-header{text-align:center;padding:20px 0 4px}
 .end-title{font-size:2rem;font-weight:900;color:var(--c-primary)}
+/* Trip card on end screen */
+.trip-card{background:var(--c-surface);border:2px solid var(--c-border);border-radius:var(--radius);padding:16px 20px;text-align:center}
+.trip-card-game{font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;color:var(--c-muted);margin-bottom:6px}
+.trip-card-route{font-size:1.3rem;font-weight:900;color:var(--c-primary);line-height:1.2}
+.trip-card-date{font-size:0.92rem;color:var(--c-muted);margin-top:5px;font-weight:600}
+.trip-card-mode{font-size:0.8rem;color:var(--c-muted);margin-top:3px}
+.screenshot-hint{text-align:center;font-size:0.82rem;color:var(--c-muted);font-style:italic}
+/* Winner box */
 .winner-box{background:var(--c-primary);color:#fff;border-radius:var(--radius);padding:20px;text-align:center}
 .winner-label{font-size:0.8rem;opacity:0.75;text-transform:uppercase;letter-spacing:1.2px}
 .winner-name{font-size:clamp(1.9rem,7vw,3.2rem);font-weight:900;margin:4px 0;line-height:1.1}
@@ -168,7 +196,7 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
 .end-section-title{font-size:0.9rem;font-weight:700;color:var(--c-muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
 .end-actions{display:flex;flex-direction:column;gap:10px;padding-bottom:calc(var(--safe-b) + 8px)}
 
-/* SETTINGS */
+/* ── SETTINGS ──────────────────────────────────────── */
 #screen-settings{max-width:500px;margin:0 auto;width:100%;gap:18px}
 .settings-hdr{display:flex;align-items:center;gap:12px;padding-top:8px}
 .settings-title{font-size:1.5rem;font-weight:800}
@@ -192,45 +220,61 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
 .theme-btn.on{border-color:var(--c-primary);background:var(--c-primary);color:#fff}
 .settings-footer{padding-bottom:calc(var(--safe-b) + 8px)}
 
-/* MODAL */
+/* ── MODAL ─────────────────────────────────────────── */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.58);z-index:1000;align-items:center;justify-content:center;padding:20px}
 .modal-overlay.show{display:flex}
-.modal-dialog{background:var(--c-surface);border-radius:var(--radius);padding:22px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-height:90dvh;overflow-y:auto}
+.modal-dialog{background:var(--c-surface);border-radius:var(--radius);padding:22px;max-width:400px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,0.3);max-height:90dvh;overflow-y:auto}
 .modal-title{font-size:1.2rem;font-weight:800;margin-bottom:8px}
-.modal-msg{color:var(--c-muted);font-size:0.93rem;line-height:1.5;margin-bottom:16px;white-space:pre-line}
+.modal-msg{color:var(--c-muted);font-size:0.93rem;line-height:1.6;margin-bottom:16px;white-space:pre-line}
 .modal-extra{margin-bottom:14px}
 .modal-actions{display:flex;flex-direction:column;gap:8px}
 .modal-actions button{min-height:50px}
+/* How to play rule groups */
+.rules-block{background:var(--c-surface2);border-radius:var(--radius-sm);padding:12px 14px;margin-bottom:10px;font-size:0.9rem;line-height:1.7}
+.rules-block strong{display:block;font-size:0.78rem;text-transform:uppercase;letter-spacing:0.8px;color:var(--c-muted);margin-bottom:6px}
 
-/* FILE INPUT */
+/* ── FILE INPUT ────────────────────────────────────── */
 .file-btn-wrap{position:relative;overflow:hidden;display:block;width:100%}
 .file-btn-wrap input[type="file"]{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;z-index:1}
 .file-btn-wrap .btn-secondary{width:100%;pointer-events:none;position:relative;z-index:0}
 .visually-hidden{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}
 
-/* LANDSCAPE */
+/* ── LANDSCAPE ─────────────────────────────────────── */
 @media (max-height:520px) and (orientation:landscape){
-  .hero-score{font-size:clamp(2.4rem,8vh,4.5rem)}
-  .hero-name{font-size:clamp(1.4rem,5vh,2.2rem)}
+  .hero-score{font-size:clamp(2.2rem,7vh,4rem)}
+  .hero-name{font-size:clamp(1.3rem,4.5vh,2rem)}
   .scoring-grid{grid-template-columns:repeat(3,1fr)}
   .btn-score.bicycle{grid-column:auto;flex-direction:column;min-height:80px}
   .game-header{padding-top:calc(var(--safe-t) + 4px);padding-bottom:8px}
+  .mini-lb{display:none}
 }
 </style>
 </head>
 <body>
 
-<!-- SETUP -->
+<!-- ══════════ SETUP SCREEN ══════════ -->
 <div id="screen-setup" class="screen active" role="main" aria-label="New game setup">
   <header class="setup-header">
     <h1 class="app-title">🏏 Car Cricket</h1>
     <p class="app-subtitle">The road trip scoring game</p>
   </header>
+
   <div class="setup-desc">
-    <strong>How to play:</strong> One player bats at a time. Spot vehicles to score runs. A 🔴 Red Car ends the batter's turn — next player is in! Game continues until someone presses End Game.
+    <strong>How to play:</strong> One player bats at a time. Spot vehicles travelling in the <strong>opposite direction</strong> to score runs. A 🔴 Red Car ends the batter's turn — next player in! Game ends when you press End Game.
   </div>
+
+  <!-- Trip details -->
+  <section aria-labelledby="trip-label">
+    <label id="trip-label" class="section-label">Trip Details <span class="optional">(optional — shows on results screen)</span></label>
+    <div class="trip-fields">
+      <input type="text" id="trip-from" placeholder="Driving from… (e.g. Sydney)" maxlength="40" autocomplete="off" aria-label="Driving from location">
+      <input type="text" id="trip-to" placeholder="Driving to… (e.g. Melbourne)" maxlength="40" autocomplete="off" aria-label="Driving to location">
+    </div>
+  </section>
+
+  <!-- Players -->
   <section aria-labelledby="players-heading">
-    <label id="players-heading" class="players-label">Players (1–5)</label>
+    <label id="players-heading" class="section-label">Players (1–5)</label>
     <div id="player-inputs">
       <div class="player-input-row">
         <input type="text" class="player-name-input" placeholder="Player 1 name" aria-label="Player 1 name" maxlength="30" autocomplete="off">
@@ -241,6 +285,24 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
       <button class="btn-add-player" onclick="addPlayerInput()" id="btn-add-player">＋ Add Player</button>
     </div>
   </section>
+
+  <!-- Game mode -->
+  <section aria-labelledby="mode-label">
+    <label id="mode-label" class="section-label">Game Mode</label>
+    <div class="mode-opts" role="radiogroup" aria-labelledby="mode-label">
+      <label class="mode-opt chosen" id="mode-opt-normal">
+        <input type="radio" name="game-mode" value="normal" id="mode-normal" checked>
+        <span class="mode-opt-text">🏏 Normal – press End Game to finish</span>
+      </label>
+      <label class="mode-opt" id="mode-opt-target">
+        <input type="radio" name="game-mode" value="target" id="mode-target">
+        <span class="mode-opt-text">🏆 First to
+          <input type="number" id="target-pts" value="100" min="1" max="9999" class="target-pts-input" inputmode="numeric" aria-label="Target score in points">
+          points wins</span>
+      </label>
+    </div>
+  </section>
+
   <div class="setup-actions">
     <button class="btn-primary" onclick="onStartGame()">🏏 Start Game</button>
     <div class="file-btn-wrap">
@@ -251,25 +313,32 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
   </div>
 </div>
 
-<!-- GAME -->
+<!-- ══════════ GAME SCREEN ══════════ -->
 <div id="screen-game" class="screen" role="main" aria-label="Game in progress">
   <header class="game-header" role="banner">
     <div class="game-header-top">
+      <!-- Left: current batter -->
       <div class="hero-info">
         <div class="hero-label" aria-hidden="true">Now Batting</div>
         <div class="hero-name" id="hero-name" aria-live="polite">—</div>
         <div class="hero-label" aria-hidden="true">Score</div>
         <div class="hero-score" id="hero-score" aria-live="polite">0</div>
+        <div class="hero-target" id="hero-target" style="display:none"></div>
       </div>
+      <!-- Centre: mini leaderboard top 3 -->
+      <div class="mini-lb" id="mini-lb" aria-label="Top 3 standings" aria-live="polite"></div>
+      <!-- Right: status + pause -->
       <div class="header-side">
         <span class="status-badge active" id="status-badge" aria-live="polite">Active</span>
         <button class="btn-pause" id="btn-pause" onclick="onTogglePause()" aria-label="Pause game">⏸ Pause</button>
       </div>
     </div>
   </header>
+
   <div class="paused-banner" id="paused-banner" role="alert">
     ⚠️ GAME PAUSED – Speed limit is 70 km/h or less
   </div>
+
   <nav class="tab-nav" role="tablist" aria-label="Game sections">
     <button class="tab-btn active" role="tab" aria-selected="true" id="tab-score" onclick="switchTab('score')">Score</button>
     <button class="tab-btn" role="tab" aria-selected="false" id="tab-players" onclick="switchTab('players')">Players</button>
@@ -277,8 +346,10 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
     <button class="tab-btn" role="tab" aria-selected="false" id="tab-umpire" onclick="switchTab('umpire')">Umpire</button>
     <button class="tab-btn" role="tab" aria-selected="false" id="tab-menu" onclick="switchTab('menu')">Menu</button>
   </nav>
+
   <div class="tab-panels">
 
+    <!-- SCORE -->
     <div id="panel-score" class="tab-panel active" role="tabpanel" aria-labelledby="tab-score">
       <div class="scoring-grid" id="scoring-grid">
         <button class="btn-score car" onclick="onRecord('car')" aria-label="Car – plus 1 point">
@@ -317,6 +388,7 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
       <div class="panel-footer"></div>
     </div>
 
+    <!-- PLAYERS -->
     <div id="panel-players" class="tab-panel" role="tabpanel" aria-labelledby="tab-players">
       <div class="sb-header">
         <span class="sb-title" id="sb-view-label">Batting Order</span>
@@ -326,6 +398,7 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
       <div class="panel-footer"></div>
     </div>
 
+    <!-- TRIP SUMMARY -->
     <div id="panel-trip" class="tab-panel" role="tabpanel" aria-labelledby="tab-trip">
       <h2 class="sec-heading">Trip Vehicle Totals</h2>
       <table class="summary-tbl" aria-label="Vehicle counts">
@@ -335,6 +408,7 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
       <div class="panel-footer"></div>
     </div>
 
+    <!-- UMPIRE -->
     <div id="panel-umpire" class="tab-panel" role="tabpanel" aria-labelledby="tab-umpire">
       <div class="ump-section">
         <div class="ump-title">Undo / Redo</div>
@@ -392,8 +466,11 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
       <div class="panel-footer"></div>
     </div>
 
+    <!-- MENU -->
     <div id="panel-menu" class="tab-panel" role="tabpanel" aria-labelledby="tab-menu">
       <div class="controls-grid">
+        <button class="btn-secondary" onclick="showHowToPlay()">📖 How to Play</button>
+        <hr class="ctrl-divider">
         <button class="btn-secondary" onclick="onEditPlayers()">✏️ Edit Player Names</button>
         <hr class="ctrl-divider">
         <button class="btn-secondary" onclick="exportSave()">💾 Save Game File</button>
@@ -412,21 +489,33 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
       <div class="panel-footer"></div>
     </div>
 
-  </div>
-</div>
+  </div><!-- /tab-panels -->
+</div><!-- /screen-game -->
 
-<!-- END GAME -->
+<!-- ══════════ END GAME SCREEN ══════════ -->
 <div id="screen-end" class="screen" role="main" aria-label="Game over">
   <div class="end-header"><h1 class="end-title">🏁 Game Over</h1></div>
+
+  <!-- Trip card (screenshot target) -->
+  <div class="trip-card" id="trip-card" style="display:none">
+    <div class="trip-card-game">Car Cricket</div>
+    <div class="trip-card-route" id="trip-card-route"></div>
+    <div class="trip-card-date" id="trip-card-date"></div>
+    <div class="trip-card-mode" id="trip-card-mode"></div>
+  </div>
+  <p class="screenshot-hint" id="screenshot-hint" style="display:none">📸 Screenshot this screen to save your results</p>
+
   <div class="winner-box" id="winner-box">
     <div class="winner-label">Winner</div>
     <div class="winner-name" id="winner-name">—</div>
     <div class="winner-score" id="winner-score-txt"></div>
   </div>
+
   <div>
     <h2 class="end-section-title">Final Leaderboard</h2>
     <ul class="sb-list" id="end-sb" aria-label="Final scores"></ul>
   </div>
+
   <div>
     <h2 class="end-section-title">Trip Vehicle Summary</h2>
     <table class="summary-tbl">
@@ -434,6 +523,7 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
       <tbody id="end-trip-tbody"></tbody>
     </table>
   </div>
+
   <div class="end-actions">
     <button class="btn-primary" onclick="onContinueGame()">▶ Continue Game</button>
     <button class="btn-secondary" onclick="onRestartGame()">🔄 Restart With Same Players</button>
@@ -442,7 +532,7 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
   </div>
 </div>
 
-<!-- SETTINGS -->
+<!-- ══════════ SETTINGS SCREEN ══════════ -->
 <div id="screen-settings" class="screen" role="main" aria-label="Settings">
   <header class="settings-hdr">
     <button class="btn-icon btn-secondary" id="btn-set-back">←</button>
@@ -494,7 +584,7 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
   <div class="settings-footer"></div>
 </div>
 
-<!-- MODAL -->
+<!-- ══════════ MODAL ══════════ -->
 <div class="modal-overlay" id="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title">
   <div class="modal-dialog">
     <h2 class="modal-title" id="modal-title">Confirm</h2>
@@ -508,11 +598,12 @@ input:focus,select:focus{outline:3px solid var(--c-accent);border-color:var(--c-
 'use strict';
 
 // ── Constants ──────────────────────────────────────────
-const LS_GAME='carcricket-v1', LS_SET='carcricket-settings', SAVE_VER=1, MAX_HIST=100, DEBOUNCE=320;
+const LS_GAME='carcricket-v2', LS_SET='carcricket-settings', SAVE_VER=2, MAX_HIST=100, DEBOUNCE=320;
 const V_SCORES={car:1,caravan:2,motorbike:5,bus:10,bicycle:-20,redCar:0};
 const V_LABELS={car:'🚗 Car',caravan:'🚐 Caravan / Boat',motorbike:'🏍️ Motorbike',bus:'🚌 Bus / Truck',bicycle:'🚲 Bicycle',redCar:'🔴 Red Car'};
 const V_KEYS=['car','caravan','motorbike','bus','bicycle','redCar'];
 const DEF_SET={sound:true,vibration:true,theme:'system',confirmRedCar:false,showIcons:true,enableRedo:true};
+const TROPHIES=['🥇','🥈','🥉'];
 
 // ── Mutable state ──────────────────────────────────────
 let GS=null, sbByScore=false, lastTap=0, setFrom='setup', aCtx=null;
@@ -522,6 +613,7 @@ const clone=o=>JSON.parse(JSON.stringify(o));
 const isoToday=()=>new Date().toISOString().split('T')[0];
 const niceDate=iso=>{try{return new Date(iso).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'});}catch(e){return iso||isoToday();}};
 const esc=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const $=id=>document.getElementById(id);
 
 // ── Settings ───────────────────────────────────────────
 function loadSet(){try{const r=localStorage.getItem(LS_SET);if(r)return Object.assign({},DEF_SET,JSON.parse(r));}catch(e){}return Object.assign({},DEF_SET);}
@@ -530,11 +622,11 @@ function getSet(){return GS?GS.settings:loadSet();}
 
 function applyTheme(t){
   document.documentElement.setAttribute('data-theme',t||'system');
-  ['system','light','dark'].forEach(n=>{const b=document.getElementById('theme-'+n);if(b){b.classList.toggle('on',n===t);b.setAttribute('aria-pressed',n===t?'true':'false');}});
+  ['system','light','dark'].forEach(n=>{const b=$('theme-'+n);if(b){b.classList.toggle('on',n===t);b.setAttribute('aria-pressed',n===t?'true':'false');}});
 }
 function populateSetUI(){
   const s=getSet();
-  const chk=(id,v)=>{const el=document.getElementById(id);if(el)el.checked=!!v;};
+  const chk=(id,v)=>{const el=$(id);if(el)el.checked=!!v;};
   chk('set-sound',s.sound); chk('set-vibrate',s.vibration);
   chk('set-icons',s.showIcons!==false); chk('set-confirm-red',s.confirmRedCar); chk('set-redo',s.enableRedo!==false);
   applyTheme(s.theme||'system');
@@ -556,7 +648,7 @@ function refreshIcons(){
 }
 function refreshRedo(){
   const en=getSet().enableRedo!==false;
-  const b=document.getElementById('btn-redo');if(b)b.style.display=en?'':'none';
+  const b=$('btn-redo');if(b)b.style.display=en?'':'none';
 }
 
 // ── Audio ──────────────────────────────────────────────
@@ -569,6 +661,7 @@ function playSound(type){
     osc.connect(g);g.connect(ctx.destination);
     const t=ctx.currentTime;
     if(type==='score'){osc.frequency.setValueAtTime(660,t);osc.frequency.exponentialRampToValueAtTime(900,t+0.1);g.gain.setValueAtTime(0.28,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.22);osc.start(t);osc.stop(t+0.22);}
+    else if(type==='win'){osc.frequency.setValueAtTime(523,t);osc.frequency.setValueAtTime(659,t+0.1);osc.frequency.setValueAtTime(784,t+0.2);g.gain.setValueAtTime(0.3,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.5);osc.start(t);osc.stop(t+0.5);}
     else if(type==='out'){osc.type='sawtooth';osc.frequency.setValueAtTime(440,t);osc.frequency.exponentialRampToValueAtTime(180,t+0.45);g.gain.setValueAtTime(0.35,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.45);osc.start(t);osc.stop(t+0.45);}
     else if(type==='neg'){osc.frequency.setValueAtTime(260,t);g.gain.setValueAtTime(0.28,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.2);osc.start(t);osc.stop(t+0.2);}
     else{osc.frequency.setValueAtTime(780,t);g.gain.setValueAtTime(0.12,t);g.gain.exponentialRampToValueAtTime(0.001,t+0.08);osc.start(t);osc.stop(t+0.08);}
@@ -595,23 +688,52 @@ function pushHist(){GS.actionHistory.push(mkSnap());if(GS.actionHistory.length>M
 function applySnap(s){GS.players=s.players;GS.currentPlayerIndex=s.currentPlayerIndex;GS.isPaused=s.isPaused;GS.isGameEnded=s.isGameEnded;GS.vehicleTotals=s.vehicleTotals;}
 
 // ── Game Logic ─────────────────────────────────────────
-function mkState(names,settings){
-  return{saveFormatVersion:SAVE_VER,players:names.map(n=>({name:n.trim(),score:0})),currentPlayerIndex:0,isPaused:false,isGameEnded:false,
+function mkState(names,settings,tripFrom,tripTo,gameMode,targetScore){
+  return{
+    saveFormatVersion:SAVE_VER,
+    players:names.map(n=>({name:n.trim(),score:0})),
+    currentPlayerIndex:0,isPaused:false,isGameEnded:false,
     vehicleTotals:{car:0,caravan:0,motorbike:0,bus:0,bicycle:0,redCar:0},
-    actionHistory:[],redoHistory:[],settings:settings||clone(DEF_SET),
-    gameStartedAt:new Date().toISOString(),lastUpdatedAt:new Date().toISOString()};
+    actionHistory:[],redoHistory:[],
+    settings:settings||clone(DEF_SET),
+    tripFrom:tripFrom||'',tripTo:tripTo||'',
+    gameMode:gameMode||'normal',targetScore:targetScore||100,
+    gameStartedAt:new Date().toISOString(),lastUpdatedAt:new Date().toISOString()
+  };
 }
 
-function startGame(names){GS=mkState(names,loadSet());sbByScore=false;saveGame();showScreen('game');render();}
+function startGame(names,tripFrom,tripTo,gameMode,targetScore){
+  GS=mkState(names,loadSet(),tripFrom,tripTo,gameMode,targetScore);
+  sbByScore=false;saveGame();showScreen('game');render();
+}
 
 function recordVehicle(type){
   if(!GS||GS.isPaused||GS.isGameEnded)return;
   const now=Date.now();if(now-lastTap<DEBOUNCE)return;lastTap=now;
   pushHist();
   GS.vehicleTotals[type]=(GS.vehicleTotals[type]||0)+1;
-  if(type==='redCar'){playSound('out');vibrate([80,40,80,40,80]);GS.currentPlayerIndex=(GS.currentPlayerIndex+1)%GS.players.length;}
-  else{const pts=V_SCORES[type];GS.players[GS.currentPlayerIndex].score+=pts;pts<0?(playSound('neg'),vibrate([200])):(playSound('score'),vibrate([30]));}
-  saveGame();render();
+  if(type==='redCar'){
+    playSound('out');vibrate([80,40,80,40,80]);
+    GS.currentPlayerIndex=(GS.currentPlayerIndex+1)%GS.players.length;
+    saveGame();render();
+  } else {
+    const pts=V_SCORES[type];
+    GS.players[GS.currentPlayerIndex].score+=pts;
+    if(pts<0){playSound('neg');vibrate([200]);}
+    else{playSound('score');vibrate([30]);}
+    saveGame();render();
+    // Target mode: check if winner reached target
+    if(GS.gameMode==='target'&&GS.players[GS.currentPlayerIndex].score>=GS.targetScore){
+      const winner=GS.players[GS.currentPlayerIndex];
+      playSound('win');vibrate([100,50,100,50,300]);
+      setTimeout(()=>{
+        showModal('🏆 We Have a Winner!',
+          `${winner.name} has reached ${GS.targetScore} points and wins the game!`,
+          [{label:'See Results',action:()=>{closeModal();endGame();},primary:true},
+           {label:'Keep Playing',action:closeModal}]);
+      },200);
+    }
+  }
 }
 
 function togglePause(){if(!GS||GS.isGameEnded)return;pushHist();GS.isPaused=!GS.isPaused;saveGame();render();}
@@ -629,7 +751,8 @@ function doRedo(){
 
 function restartGame(){
   if(!GS)return;
-  GS=mkState(GS.players.map(p=>p.name),clone(GS.settings));
+  // Keep names, trip details, game mode — reset scores/totals
+  GS=mkState(GS.players.map(p=>p.name),clone(GS.settings),GS.tripFrom,GS.tripTo,GS.gameMode,GS.targetScore);
   sbByScore=false;saveGame();showScreen('game');render();
 }
 
@@ -639,23 +762,48 @@ function endGame(){if(!GS)return;pushHist();GS.isGameEnded=true;saveGame();showE
 function render(){
   if(!GS)return;
   const cp=GS.players[GS.currentPlayerIndex];
-  document.getElementById('hero-name').textContent=cp.name;
-  const se=document.getElementById('hero-score');se.textContent=cp.score;se.classList.toggle('neg',cp.score<0);
+  $('hero-name').textContent=cp.name;
+  const se=$('hero-score');se.textContent=cp.score;se.classList.toggle('neg',cp.score<0);
+  // Target indicator below score
+  const ht=$('hero-target');
+  if(ht){
+    if(GS.gameMode==='target'){
+      ht.style.display='';
+      ht.textContent=`Target: ${GS.targetScore} pts`;
+    } else ht.style.display='none';
+  }
+  // Status
   const paused=GS.isPaused;
-  const badge=document.getElementById('status-badge'),pb=document.getElementById('btn-pause'),banner=document.getElementById('paused-banner');
+  const badge=$('status-badge'),pb=$('btn-pause'),banner=$('paused-banner');
   badge.textContent=paused?'Paused':'Active';badge.className='status-badge '+(paused?'paused':'active');
   pb.textContent=paused?'▶ Resume':'⏸ Pause';pb.setAttribute('aria-label',paused?'Resume game':'Pause game');
   pb.classList.toggle('is-paused',paused);banner.classList.toggle('show',paused);
   const dis=paused||GS.isGameEnded;
   document.querySelectorAll('#scoring-grid .btn-score,#btn-red-car').forEach(b=>b.disabled=dis);
-  const ub=document.getElementById('btn-undo'),rb=document.getElementById('btn-redo');
+  // Undo/Redo
+  const ub=$('btn-undo'),rb=$('btn-redo');
   if(ub)ub.disabled=!GS.actionHistory.length;if(rb)rb.disabled=!GS.redoHistory.length;
-  const ui=document.getElementById('undo-info');if(ui){const h=GS.actionHistory.length;ui.textContent=h?`${h} action${h===1?'':'s'} in history`:'No actions to undo';}
-  renderSB();renderTrip(document.getElementById('trip-tbody'));renderUmpSels();refreshIcons();refreshRedo();
+  const ui=$('undo-info');if(ui){const h=GS.actionHistory.length;ui.textContent=h?`${h} action${h===1?'':'s'} in history`:'No actions to undo';}
+  renderMiniLB();
+  renderSB();
+  renderTrip($('trip-tbody'));
+  renderUmpSels();
+  refreshIcons();refreshRedo();
+}
+
+function renderMiniLB(){
+  const el=$('mini-lb');if(!el||!GS)return;
+  if(GS.players.length<2){el.innerHTML='';return;}
+  const sorted=[...GS.players].map((p,i)=>({...p,idx:i})).sort((a,b)=>b.score-a.score);
+  const top=sorted.slice(0,Math.min(3,sorted.length));
+  el.innerHTML=top.map((p,i)=>{
+    const nm=p.name.length>9?p.name.slice(0,8)+'…':p.name;
+    return`<div class="trophy-row"><span class="trophy-emoji" aria-hidden="true">${TROPHIES[i]}</span><span class="trophy-name">${esc(nm)}</span><span class="trophy-pts">${p.score}</span></div>`;
+  }).join('');
 }
 
 function renderSB(){
-  const list=document.getElementById('sb-list');if(!list||!GS)return;
+  const list=$('sb-list');if(!list||!GS)return;
   let ps=GS.players.map((p,i)=>({...p,idx:i}));
   if(sbByScore)ps=[...ps].sort((a,b)=>b.score-a.score);
   list.innerHTML=ps.map((p,rank)=>{
@@ -678,7 +826,7 @@ function renderTrip(tbody){
 function renderUmpSels(){
   if(!GS)return;
   ['ump-psel','ump-tsel'].forEach(id=>{
-    const sel=document.getElementById(id);if(!sel)return;
+    const sel=$(id);if(!sel)return;
     const prev=sel.value;
     sel.innerHTML=GS.players.map((p,i)=>`<option value="${i}">${esc(p.name)}</option>`).join('');
     if(prev!==''&&sel.querySelector(`option[value="${prev}"]`))sel.value=prev;
@@ -688,30 +836,46 @@ function renderUmpSels(){
 
 function showEndScreen(){
   if(!GS)return;
+  // Trip card
+  const tripCard=$('trip-card'),hint=$('screenshot-hint');
+  const hasRoute=GS.tripFrom||GS.tripTo;
+  if(tripCard){
+    if(hasRoute){
+      tripCard.style.display='';if(hint)hint.style.display='';
+      if(GS.tripFrom&&GS.tripTo) $('trip-card-route').textContent=`${GS.tripFrom}  →  ${GS.tripTo}`;
+      else if(GS.tripFrom) $('trip-card-route').textContent=`From: ${GS.tripFrom}`;
+      else $('trip-card-route').textContent=`To: ${GS.tripTo}`;
+      $('trip-card-date').textContent=GS.gameStartedAt?niceDate(GS.gameStartedAt):'';
+      $('trip-card-mode').textContent=GS.gameMode==='target'?`First to ${GS.targetScore} points`:'';
+    } else {
+      tripCard.style.display='none';if(hint)hint.style.display='none';
+    }
+  }
+  // Winner
   const sorted=[...GS.players].map((p,i)=>({...p,idx:i})).sort((a,b)=>b.score-a.score);
   const top=sorted[0].score,winners=sorted.filter(p=>p.score===top);
-  document.getElementById('winner-name').textContent=winners.length===1?winners[0].name:winners.map(w=>w.name).join(' & ');
-  document.getElementById('winner-score-txt').textContent=winners.length===1?`Score: ${winners[0].score}`:`Tied at ${top} points`;
-  document.getElementById('end-sb').innerHTML=sorted.map((p,rank)=>
+  $('winner-name').textContent=winners.length===1?winners[0].name:winners.map(w=>w.name).join(' & ');
+  $('winner-score-txt').textContent=winners.length===1?`Score: ${winners[0].score}`:`Tied at ${top} points`;
+  $('end-sb').innerHTML=sorted.map((p,rank)=>
     `<li class="sb-item${rank===0?' current':''}" aria-label="${esc(p.name)}: ${p.score}${rank===0?', winner':''}">
       <span class="sb-rank" aria-hidden="true">${rank+1}</span>
       <span class="sb-name">${esc(p.name)}</span>
       ${rank===0?'<span class="batting-badge" aria-hidden="true">Winner</span>':''}
       <span class="sb-score">${p.score}</span></li>`).join('');
-  renderTrip(document.getElementById('end-trip-tbody'));
+  renderTrip($('end-trip-tbody'));
   showScreen('end');
 }
 
 // ── Navigation ─────────────────────────────────────────
-function showScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const t=document.getElementById('screen-'+name);if(t)t.classList.add('active');}
+function showScreen(name){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));const t=$('screen-'+name);if(t)t.classList.add('active');}
 function switchTab(name){
   document.querySelectorAll('.tab-btn').forEach(b=>{const on=b.id==='tab-'+name;b.classList.toggle('active',on);b.setAttribute('aria-selected',on?'true':'false');});
   document.querySelectorAll('.tab-panel').forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
 }
 function toggleSBSort(){
   sbByScore=!sbByScore;
-  document.getElementById('sb-view-label').textContent=sbByScore?'Leaderboard':'Batting Order';
-  document.getElementById('btn-sb-sort').textContent=sbByScore?'⇅ By Order':'⇅ By Score';
+  $('sb-view-label').textContent=sbByScore?'Leaderboard':'Batting Order';
+  $('btn-sb-sort').textContent=sbByScore?'⇅ By Order':'⇅ By Score';
   renderSB();
 }
 
@@ -721,7 +885,13 @@ function onStartGame(){
   const names=[];let ok=true;
   inputs.forEach(inp=>{const v=inp.value.trim();const bad=!v;inp.style.borderColor=bad?'var(--c-danger)':'';inp.setAttribute('aria-invalid',bad?'true':'false');if(bad)ok=false;else names.push(v);});
   if(!ok||!names.length){showModal('Names Required','Please enter a name for every player before starting.',[{label:'OK',action:closeModal,primary:true}]);return;}
-  startGame(names);
+  const tripFrom=($('trip-from')||{}).value||'';
+  const tripTo=($('trip-to')||{}).value||'';
+  const modeEl=document.querySelector('input[name="game-mode"]:checked');
+  const gameMode=modeEl?modeEl.value:'normal';
+  const tpEl=$('target-pts');
+  const targetScore=Math.max(1,parseInt(tpEl?tpEl.value:'100',10)||100);
+  startGame(names,tripFrom.trim(),tripTo.trim(),gameMode,targetScore);
 }
 
 function onTogglePause(){togglePause();}
@@ -742,21 +912,21 @@ function onUndo(){if(!doUndo())showModal('Nothing to Undo','There are no actions
 function onRedo(){if(!doRedo())showModal('Nothing to Redo','There are no actions to redo.',[{label:'OK',action:closeModal,primary:true}]);}
 
 function onUmpAdjust(){
-  const idx=parseInt(document.getElementById('ump-psel').value,10);
-  const pts=parseInt(document.getElementById('ump-pts').value,10);
+  const idx=parseInt($('ump-psel').value,10);
+  const pts=parseInt($('ump-pts').value,10);
   if(!GS||isNaN(idx)||isNaN(pts)){showModal('Invalid Input','Select a player and enter a valid number.',[{label:'OK',action:closeModal,primary:true}]);return;}
-  pushHist();GS.players[idx].score+=pts;document.getElementById('ump-pts').value='';saveGame();render();playSound('ui');
+  pushHist();GS.players[idx].score+=pts;$('ump-pts').value='';saveGame();render();playSound('ui');
 }
 function onUmpTurn(){
-  const idx=parseInt(document.getElementById('ump-tsel').value,10);
+  const idx=parseInt($('ump-tsel').value,10);
   if(!GS||isNaN(idx))return;
   pushHist();GS.currentPlayerIndex=idx;saveGame();render();playSound('ui');
 }
 function onUmpVehicle(){
-  const type=document.getElementById('ump-vtype').value;
-  const cnt=parseInt(document.getElementById('ump-vcnt').value,10);
+  const type=$('ump-vtype').value;
+  const cnt=parseInt($('ump-vcnt').value,10);
   if(!GS||!type||isNaN(cnt)||cnt<0){showModal('Invalid Input','Select a vehicle and enter a count of 0 or more.',[{label:'OK',action:closeModal,primary:true}]);return;}
-  pushHist();GS.vehicleTotals[type]=cnt;document.getElementById('ump-vcnt').value='';saveGame();render();playSound('ui');
+  pushHist();GS.vehicleTotals[type]=cnt;$('ump-vcnt').value='';saveGame();render();playSound('ui');
 }
 
 function onEndGame(){
@@ -766,7 +936,7 @@ function onEndGame(){
     {label:'Cancel',action:closeModal}]);
 }
 function onRestartGame(){
-  showModal('🔄 Restart Game','Reset all scores and vehicle totals to zero? Player names will stay the same.',[
+  showModal('🔄 Restart Game','Reset all scores and vehicle totals to zero? Player names and trip details stay the same.',[
     {label:'Restart',action:()=>{closeModal();restartGame();},danger:true},
     {label:'Cancel',action:closeModal}]);
 }
@@ -804,9 +974,44 @@ function onLoadFile(event){
   const f=event.target.files&&event.target.files[0];if(!f)return;event.target.value='';importFile(f);
 }
 
+// ── How to Play ────────────────────────────────────────
+function showHowToPlay(){
+  const extra=`
+<div class="rules-block">
+<strong>What counts?</strong>
+✅ Vehicles travelling in the OPPOSITE direction<br>
+❌ Parked cars — don't count<br>
+❌ Cars overtaking you — don't count<br>
+❌ Vehicles behind you going the same way — don't count<br>
+❌ Vehicles in driveways or car parks — don't count
+</div>
+<div class="rules-block">
+<strong>Scoring</strong>
+🚗 Car = +1 run<br>
+🚐 Caravan or boat towing = +2 runs<br>
+🏍️ Motorbike = +5 runs<br>
+🚌 Bus or Truck = +10 runs<br>
+🚲 Bicycle = −20 runs<br>
+🔴 Red Car = OUT — no points, next player bats
+</div>
+<div class="rules-block">
+<strong>Rules</strong>
+• Only one player bats at a time<br>
+• A Red Car ends the batter's turn immediately<br>
+• Scores can go below zero — watch out for bikes!<br>
+• After the last player is out, play returns to Player 1<br>
+• Game continues until End Game is pressed<br>
+• In First To X mode, the first player to reach the target wins<br>
+• Pause when speed limit is 70 km/h or below<br>
+• If a truck is towing a trailer, count it as a Caravan/Boat
+</div>`;
+  showModal('📖 How to Play','Vehicle must be travelling towards you in the opposite direction to count.',[
+    {label:'Got it!',action:closeModal,primary:true}],extra);
+}
+
 // ── Setup Helpers ──────────────────────────────────────
 function addPlayerInput(){
-  const c=document.getElementById('player-inputs');
+  const c=$('player-inputs');
   if(c.querySelectorAll('.player-input-row').length>=5)return;
   const n=c.querySelectorAll('.player-input-row').length+1;
   const row=document.createElement('div');row.className='player-input-row';
@@ -816,33 +1021,48 @@ function addPlayerInput(){
 }
 function removePlayerInput(btn){btn.closest('.player-input-row').remove();refreshSetup();}
 function refreshSetup(){
-  const rows=[...document.getElementById('player-inputs').querySelectorAll('.player-input-row')];
+  const rows=[...$('player-inputs').querySelectorAll('.player-input-row')];
   rows.forEach((row,i)=>{
     const inp=row.querySelector('input'),rb=row.querySelector('.btn-remove');
     if(inp){inp.placeholder=`Player ${i+1} name`;inp.setAttribute('aria-label',`Player ${i+1} name`);}
     if(rb){rb.style.display=rows.length>1?'':'none';rb.setAttribute('aria-label',`Remove player ${i+1}`);}
   });
-  const ab=document.getElementById('btn-add-player');if(ab)ab.disabled=rows.length>=5;
+  const ab=$('btn-add-player');if(ab)ab.disabled=rows.length>=5;
 }
 function resetSetup(){
-  document.getElementById('player-inputs').innerHTML=
+  $('player-inputs').innerHTML=
     `<div class="player-input-row"><input type="text" class="player-name-input" placeholder="Player 1 name" aria-label="Player 1 name" maxlength="30" autocomplete="off">
     <button class="btn-icon btn-remove" onclick="removePlayerInput(this)" aria-label="Remove player 1" style="display:none">✕</button></div>`;
-  const ab=document.getElementById('btn-add-player');if(ab)ab.disabled=false;
+  const ab=$('btn-add-player');if(ab)ab.disabled=false;
+  // Reset trip fields
+  const tf=$('trip-from'),tt=$('trip-to');if(tf)tf.value='';if(tt)tt.value='';
+  // Reset mode
+  const mn=$('mode-normal');if(mn)mn.checked=true;
+  updateModeOptStyles();
+}
+
+// Game mode option visual highlight
+function updateModeOptStyles(){
+  const norm=$('mode-normal');
+  const normOpt=$('mode-opt-normal'),targOpt=$('mode-opt-target');
+  if(!norm)return;
+  const isNorm=norm.checked;
+  if(normOpt)normOpt.classList.toggle('chosen',isNorm);
+  if(targOpt)targOpt.classList.toggle('chosen',!isNorm);
 }
 
 // ── Modal ──────────────────────────────────────────────
 function showModal(title,msg,actions,extraHtml){
-  document.getElementById('modal-title').textContent=title;
-  document.getElementById('modal-msg').textContent=msg;
-  const ex=document.getElementById('modal-extra');ex.innerHTML=extraHtml||'';
-  const ab=document.getElementById('modal-btns');ab.innerHTML='';
+  $('modal-title').textContent=title;
+  $('modal-msg').textContent=msg;
+  const ex=$('modal-extra');ex.innerHTML=extraHtml||'';
+  const ab=$('modal-btns');ab.innerHTML='';
   (actions||[]).forEach(a=>{const b=document.createElement('button');b.textContent=a.label;b.className=a.danger?'btn-danger':(a.primary?'btn-primary':'btn-secondary');b.onclick=a.action;ab.appendChild(b);});
-  document.getElementById('modal').classList.add('show');
+  $('modal').classList.add('show');
   setTimeout(()=>{const f=ab.querySelector('button');if(f)f.focus();},60);
 }
-function closeModal(){document.getElementById('modal').classList.remove('show');document.getElementById('modal-extra').innerHTML='';}
-document.getElementById('modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
+function closeModal(){$('modal').classList.remove('show');$('modal-extra').innerHTML='';}
+$('modal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal();});
 
 // ── File I/O ───────────────────────────────────────────
@@ -860,6 +1080,9 @@ function importFile(file){
         closeModal();GS=data;
         if(!Array.isArray(GS.redoHistory))GS.redoHistory=[];
         if(!Array.isArray(GS.actionHistory))GS.actionHistory=[];
+        // Fill missing fields for older saves
+        if(!GS.tripFrom)GS.tripFrom='';if(!GS.tripTo)GS.tripTo='';
+        if(!GS.gameMode)GS.gameMode='normal';if(!GS.targetScore)GS.targetScore=100;
         saveGame();GS.isGameEnded?showEndScreen():(showScreen('game'),render());
       },primary:true},
       {label:'Cancel',action:closeModal}]);
@@ -867,6 +1090,7 @@ function importFile(file){
   reader.onerror=()=>showModal('File Error','Could not read the file.',[{label:'OK',action:closeModal,primary:true}]);
   reader.readAsText(file);
 }
+
 function exportReport(){
   if(!GS)return;
   const sorted=[...GS.players].sort((a,b)=>b.score-a.score);
@@ -874,9 +1098,13 @@ function exportReport(){
   const vt=GS.vehicleTotals,total=V_KEYS.reduce((a,k)=>a+(vt[k]||0),0);
   const negs=sorted.filter(p=>p.score<0);
   const date=GS.gameStartedAt?niceDate(GS.gameStartedAt):isoToday();
+  const route=GS.tripFrom&&GS.tripTo?`${GS.tripFrom} → ${GS.tripTo}`:GS.tripFrom?`From: ${GS.tripFrom}`:GS.tripTo?`To: ${GS.tripTo}`:'';
+  const modeStr=GS.gameMode==='target'?`First to ${GS.targetScore} points`:'Normal';
   const lines=[
     '================================','      CAR CRICKET RESULTS       ','================================','',
-    `Date: ${date}`,'',
+    `Date: ${date}`,
+    route?`Trip: ${route}`:'',
+    `Mode: ${modeStr}`,'',
     '--- WINNER ---',
     winners.length===1?`${winners[0].name} with ${winners[0].score} points!`:`TIE: ${winners.map(w=>w.name).join(' and ')} with ${top} points each`,
     '','--- FINAL SCORES ---',
@@ -889,9 +1117,10 @@ function exportReport(){
     '','--- NOTES ---',
     negs.length?`Players with negative score: ${negs.map(p=>p.name).join(', ')}`:'No players finished with a negative score.',
     '','================================','Generated by Car Cricket App','================================'
-  ];
+  ].filter(l=>l!==undefined);
   downloadText(lines.join('\n'),`car-cricket-report-${isoToday()}.txt`);
 }
+
 function downloadText(text,filename){
   const blob=new Blob([text],{type:'text/plain'});
   const url=URL.createObjectURL(blob);
@@ -902,31 +1131,50 @@ function downloadText(text,filename){
 
 // ── Settings screen wiring ─────────────────────────────
 function openSettings(from){setFrom=from||'setup';populateSetUI();showScreen('settings');}
-document.getElementById('btn-set-back').addEventListener('click',()=>{showScreen(setFrom);if(setFrom==='game'&&GS)render();});
-document.getElementById('btn-set-setup').addEventListener('click',()=>openSettings('setup'));
-document.getElementById('btn-set-game').addEventListener('click',()=>openSettings('game'));
+$('btn-set-back').addEventListener('click',()=>{showScreen(setFrom);if(setFrom==='game'&&GS)render();});
+$('btn-set-setup').addEventListener('click',()=>openSettings('setup'));
+$('btn-set-game').addEventListener('click',()=>openSettings('game'));
+
+// ── Mode option wiring ─────────────────────────────────
+document.querySelectorAll('input[name="game-mode"]').forEach(r=>{
+  r.addEventListener('change',updateModeOptStyles);
+});
+// Focusing target-pts auto-selects target mode
+const tpEl=$('target-pts');
+if(tpEl){
+  tpEl.addEventListener('focus',()=>{
+    const mt=$('mode-target');if(mt&&!mt.checked){mt.checked=true;updateModeOptStyles();}
+  });
+  // Clicking the number input inside the label should not bubble to label's default behaviour incorrectly
+  tpEl.addEventListener('click',e=>e.stopPropagation());
+}
 
 // ── Init ───────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded',()=>{
   const s=loadSet();applyTheme(s.theme||'system');populateSetUI();
+  updateModeOptStyles();
   const saved=loadGame();
   if(saved){
     const names=saved.players.map(p=>p.name).join(', ');
     const scores=saved.players.map(p=>`${p.name}: ${p.score}`).join(' | ');
-    showModal('🏏 Resume Game?',`Previous game found:\n${names}\n\nScores: ${scores}`,[
-      {label:'Resume Game',action:()=>{
-        closeModal();GS=saved;
-        if(!Array.isArray(GS.redoHistory))GS.redoHistory=[];
-        if(!Array.isArray(GS.actionHistory))GS.actionHistory=[];
-        GS.isGameEnded?showEndScreen():(showScreen('game'),render());
-      },primary:true},
-      {label:'New Game',action:()=>{closeModal();showScreen('setup');}},
-      {label:'Load File',action:()=>{
-        closeModal();
-        const inp=document.createElement('input');inp.type='file';inp.accept='.txt,.json';
-        inp.onchange=onLoadFile;document.body.appendChild(inp);inp.click();document.body.removeChild(inp);
-      }}
-    ]);
+    const route=saved.tripFrom&&saved.tripTo?`\nTrip: ${saved.tripFrom} → ${saved.tripTo}`:saved.tripFrom?`\nFrom: ${saved.tripFrom}`:saved.tripTo?`\nTo: ${saved.tripTo}`:'';
+    showModal('🏏 Resume Game?',
+      `Previous game found:\n${names}${route}\n\nScores: ${scores}`,
+      [{label:'Resume Game',action:()=>{
+          closeModal();GS=saved;
+          if(!Array.isArray(GS.redoHistory))GS.redoHistory=[];
+          if(!Array.isArray(GS.actionHistory))GS.actionHistory=[];
+          if(!GS.tripFrom)GS.tripFrom='';if(!GS.tripTo)GS.tripTo='';
+          if(!GS.gameMode)GS.gameMode='normal';if(!GS.targetScore)GS.targetScore=100;
+          GS.isGameEnded?showEndScreen():(showScreen('game'),render());
+        },primary:true},
+       {label:'New Game',action:()=>{closeModal();showScreen('setup');}},
+       {label:'Load File',action:()=>{
+          closeModal();
+          const inp=document.createElement('input');inp.type='file';inp.accept='.txt,.json';
+          inp.onchange=onLoadFile;document.body.appendChild(inp);inp.click();document.body.removeChild(inp);
+        }}
+      ]);
   }else{showScreen('setup');}
 });
 </script>
